@@ -2,12 +2,11 @@ namespace SokobanTests;
 
 public class Sokoban
 {
-    readonly (int, int)[] targets;
+    public readonly (int, int)[] Targets;
     public readonly (int, int)[] Boxes;
     private readonly Sokoban previous;
 
-
-    public bool IsSolved => targets.All(t => Boxes.Contains(t));
+    public bool IsSolved => Targets.All(t => Boxes.Contains(t));
     public (int x, int y) WherePlayerIs { get; }
 
     public Sokoban((int, int) wherePlayerIs, (int, int)[] targets, (int, int)[] boxes, Sokoban previous)
@@ -34,7 +33,7 @@ public class Sokoban
         if (boxes.Distinct().Count() != boxes.Length)
             throw new ArgumentException("Boxes must be unique");
 
-        this.targets = targets;
+        this.Targets = targets;
         this.Boxes = boxes;
     }
 
@@ -42,7 +41,7 @@ public class Sokoban
     {
         return IsBoxAt((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y))
             ? PushBoxTowards(direction)
-            : new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), targets, Boxes, this);
+            : new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), Targets, Boxes, this);
     }
 
     bool IsBoxAt((int x, int y) position) => Boxes.Contains((position.x, position.y));
@@ -55,7 +54,7 @@ public class Sokoban
         var boxIndex = Array.IndexOf(Boxes, (WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y));
         var newBoxes = Boxes.ToArray();
         newBoxes[boxIndex] = (WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2);
-        return new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), targets, newBoxes, this);
+        return new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), Targets, newBoxes, this);
     }
 
     public Sokoban Undo()
