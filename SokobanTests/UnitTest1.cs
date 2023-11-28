@@ -67,4 +67,12 @@ public class Tests
             .Undo()
             .WherePlayerIs.Should().Be((0, 0));
     }
+
+    [Test]
+    public void UndoFirst()
+    {
+        new Sokoban((0, 0), targets: new[] { (0, 0) }, boxes: new[] { (2, 0) })
+            .Undo()
+            .Should().BeNull();
+    }
 }
