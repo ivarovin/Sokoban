@@ -1,3 +1,5 @@
+using FluentAssertions;
+
 namespace SokobanTests;
 
 // 1. El personaje se puede mover en las cuatro direcciones (arriba, abajo, izquierda, derecha)
@@ -9,8 +11,20 @@ namespace SokobanTests;
 public class Tests
 {
     [Test]
-    public void Test1()
+    public void LoseGame()
     {
-        Assert.Pass();
+        var sut = new Sokoban(new[] { (0, 0) }, new[] { (1, 0) });
+        
+        sut.IsSolved.Should().BeFalse();
     }
+}
+
+public class Sokoban
+{
+    public bool IsSolved { get; set; }
+    public Sokoban((int, int)[] valueTuples, (int, int)[] valueTuples1)
+    {
+        
+    }
+
 }
