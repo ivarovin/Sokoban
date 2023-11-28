@@ -32,6 +32,14 @@ public class Tests
 
         sut.WherePlayerIs.Should().Be((1, 1));
     }
+
+    [Test]
+    public void Move_Player()
+    {
+        new Sokoban((0, 0), targets: new[] { (0, 0) }, boxes: new[] { (2, 0) })
+            .MoveTowards((1, 0))
+            .WherePlayerIs.Should().Be((1, 0));
+    }
 }
 
 public class Sokoban
@@ -44,6 +52,9 @@ public class Sokoban
     public Sokoban((int, int) wherePlayerIs, (int, int)[] targets, (int, int)[] boxes)
         : this(targets, boxes)
     {
+        if (boxes.Contains(wherePlayerIs))
+            throw new ArgumentException("Player cannot be in a box");
+        
         WherePlayerIs = wherePlayerIs;
     }
 
@@ -59,4 +70,7 @@ public class Sokoban
         this.targets = targets;
         this.boxes = boxes;
     }
+
+    public Sokoban MoveTowards((int x, int y) direction) 
+        => new((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), targets, boxes);
 }
