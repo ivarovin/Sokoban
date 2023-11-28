@@ -40,13 +40,23 @@ public class Tests
             .MoveTowards((1, 0))
             .WherePlayerIs.Should().Be((1, 0));
     }
+
+    [Test]
+    public void Push_Box()
+    {
+        var sut = new Sokoban((0, 0), targets: new[] { (0, 0) }, boxes: new[] { (1, 0) })
+            .MoveTowards((1, 0));
+        
+        sut.WherePlayerIs.Should().Be((1, 0));
+        sut.Boxes.First().Should().Be((2, 0));
+    }
 }
 
 public class Sokoban
 {
     readonly (int, int)[] targets;
-    readonly (int, int)[] boxes;
-    public bool IsSolved => targets.All(t => boxes.Contains(t));
+    public readonly (int, int)[] Boxes;
+    public bool IsSolved => targets.All(t => Boxes.Contains(t));
     public (int x, int y) WherePlayerIs { get; }
 
     public Sokoban((int, int) wherePlayerIs, (int, int)[] targets, (int, int)[] boxes)
@@ -54,7 +64,7 @@ public class Sokoban
     {
         if (boxes.Contains(wherePlayerIs))
             throw new ArgumentException("Player cannot be in a box");
-        
+
         WherePlayerIs = wherePlayerIs;
     }
 
@@ -68,9 +78,22 @@ public class Sokoban
             throw new ArgumentException("Boxes must be unique");
 
         this.targets = targets;
-        this.boxes = boxes;
+        this.Boxes = boxes;
     }
 
-    public Sokoban MoveTowards((int x, int y) direction) 
-        => new((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), targets, boxes);
+    public Sokoban MoveTowards((int x, int y) direction)
+    {
+        if (Boxes.Contains((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y)))
+            return PushBoxTowards(direction);
+
+        return new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), targets, Boxes);
+    }
+
+    Sokoban PushBoxTowards((int x, int y) direction)
+    {
+        var boxIndex = Array.IndexOf(Boxes, (WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y));
+        var newBoxes = Boxes.ToArray();
+        newBoxes[boxIndex] = (WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2);
+        return new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), targets, newBoxes);
+    }
 }
