@@ -17,14 +17,25 @@ public class Tests
         
         sut.IsSolved.Should().BeFalse();
     }
+
+    [Test]
+    public void SolveGame()
+    {
+        var sut = new Sokoban(new[] { (0, 0) }, new[] { (0, 0) });
+        
+        sut.IsSolved.Should().BeTrue();
+    }
 }
 
 public class Sokoban
 {
-    public bool IsSolved { get; set; }
-    public Sokoban((int, int)[] valueTuples, (int, int)[] valueTuples1)
+    readonly (int, int)[] targets;
+    readonly (int, int)[] boxes;
+    public bool IsSolved => targets.All(t => boxes.Contains(t));
+    
+    public Sokoban((int, int)[] targets, (int, int)[] boxes)
     {
-        
+        this.targets = targets;
+        this.boxes = boxes;
     }
-
 }
