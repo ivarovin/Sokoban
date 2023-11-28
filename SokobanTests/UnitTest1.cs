@@ -58,4 +58,13 @@ public class Tests
             .MoveTowards((1, 0))
             .WherePlayerIs.Should().Be((0, 0));
     }
+
+    [Test]
+    public void Undo()
+    {
+        new Sokoban((0, 0), targets: new[] { (0, 0) }, boxes: new[] { (2, 0) })
+            .MoveTowards((1, 0))
+            .Undo()
+            .WherePlayerIs.Should().Be((0, 0));
+    }
 }
