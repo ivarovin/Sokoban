@@ -36,6 +36,10 @@ public class Sokoban
     {
         if (targets.Length != boxes.Length)
             throw new ArgumentException("Targets and boxes must have the same length");
+        if (targets.Distinct().Count() != targets.Length)
+            throw new ArgumentException("Targets must be unique");
+        if (boxes.Distinct().Count() != boxes.Length)
+            throw new ArgumentException("Boxes must be unique");
 
         this.targets = targets;
         this.boxes = boxes;
