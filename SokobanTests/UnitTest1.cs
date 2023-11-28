@@ -46,9 +46,17 @@ public class Tests
     {
         var sut = new Sokoban((0, 0), targets: new[] { (0, 0) }, boxes: new[] { (1, 0) })
             .MoveTowards((1, 0));
-        
+
         sut.WherePlayerIs.Should().Be((1, 0));
         sut.Boxes.First().Should().Be((2, 0));
+    }
+
+    [Test]
+    public void PushBox_IsNotPossible_IfThereIsAnotherBehind()
+    {
+        new Sokoban((0, 0), targets: new[] { (0, 0), (1, 0) }, boxes: new[] { (1, 0), (2, 0) })
+            .MoveTowards((1, 0))
+            .WherePlayerIs.Should().Be((0, 0));
     }
 }
 
@@ -83,10 +91,20 @@ public class Sokoban
 
     public Sokoban MoveTowards((int x, int y) direction)
     {
-        if (Boxes.Contains((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y)))
+        if (IsBoxAt(direction))
+        {
+            if (IsBoxAt((direction.x * 2, direction.y * 2)))
+                return this;
+
             return PushBoxTowards(direction);
+        }
 
         return new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), targets, Boxes);
+    }
+
+    bool IsBoxAt((int x, int y) direction)
+    {
+        return Boxes.Contains((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y));
     }
 
     Sokoban PushBoxTowards((int x, int y) direction)
