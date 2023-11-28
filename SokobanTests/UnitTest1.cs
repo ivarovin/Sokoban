@@ -13,16 +13,15 @@ public class Tests
     [Test]
     public void LoseGame()
     {
-        var sut = new Sokoban(new[] { (0, 0) }, new[] { (1, 0) });
-        
-        sut.IsSolved.Should().BeFalse();
+        new Sokoban(targets: new[] { (0, 0) }, boxes: new[] { (1, 0) }).IsSolved.Should().BeFalse();
+        new Sokoban(targets: new[] { (0, 0), (1, 0) }, boxes: new[] { (0, 0), (2, 0) }).IsSolved.Should().BeFalse();
     }
 
     [Test]
     public void SolveGame()
     {
         var sut = new Sokoban(new[] { (0, 0) }, new[] { (0, 0) });
-        
+
         sut.IsSolved.Should().BeTrue();
     }
 }
@@ -32,9 +31,12 @@ public class Sokoban
     readonly (int, int)[] targets;
     readonly (int, int)[] boxes;
     public bool IsSolved => targets.All(t => boxes.Contains(t));
-    
+
     public Sokoban((int, int)[] targets, (int, int)[] boxes)
     {
+        if (targets.Length != boxes.Length)
+            throw new ArgumentException("Targets and boxes must have the same length");
+
         this.targets = targets;
         this.boxes = boxes;
     }
