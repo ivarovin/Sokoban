@@ -24,6 +24,14 @@ public class Tests
 
         sut.IsSolved.Should().BeTrue();
     }
+
+    [Test]
+    public void Spawn_Player()
+    {
+        var sut = new Sokoban((1, 1), new[] { (0, 0) }, new[] { (0, 0) });
+
+        sut.WherePlayerIs.Should().Be((1, 1));
+    }
 }
 
 public class Sokoban
@@ -31,6 +39,13 @@ public class Sokoban
     readonly (int, int)[] targets;
     readonly (int, int)[] boxes;
     public bool IsSolved => targets.All(t => boxes.Contains(t));
+    public (int x, int y) WherePlayerIs { get; }
+
+    public Sokoban((int, int) wherePlayerIs, (int, int)[] targets, (int, int)[] boxes)
+        : this(targets, boxes)
+    {
+        WherePlayerIs = wherePlayerIs;
+    }
 
     public Sokoban((int, int)[] targets, (int, int)[] boxes)
     {
