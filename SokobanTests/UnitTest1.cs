@@ -91,9 +91,9 @@ public class Sokoban
 
     public Sokoban MoveTowards((int x, int y) direction)
     {
-        if (IsBoxAt(direction))
+        if (IsBoxAt((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y)))
         {
-            if (IsBoxAt((direction.x * 2, direction.y * 2)))
+            if (IsBoxAt((WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2)))
                 return this;
 
             return PushBoxTowards(direction);
@@ -102,10 +102,7 @@ public class Sokoban
         return new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), targets, Boxes);
     }
 
-    bool IsBoxAt((int x, int y) direction)
-    {
-        return Boxes.Contains((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y));
-    }
+    bool IsBoxAt((int x, int y) position) => Boxes.Contains((position.x, position.y));
 
     Sokoban PushBoxTowards((int x, int y) direction)
     {
