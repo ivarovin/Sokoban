@@ -13,12 +13,7 @@ while (!sokoban.IsSolved)
         sokoban = sokoban.MoveTowards((1, 0));
 }
 
-while (sokoban != null)
-{
-    Render(sokoban);
-    sokoban = sokoban.Undo();
-    await Task.Delay(100);
-}
+await ReplayBackwards(sokoban);
 
 void Render(Sokoban sokoban1)
 {
@@ -39,5 +34,15 @@ void Render(Sokoban sokoban1)
         }
 
         Console.WriteLine();
+    }
+}
+
+async Task ReplayBackwards(Sokoban sokoban2)
+{
+    while (sokoban2 != null)
+    {
+        Render(sokoban2);
+        sokoban2 = sokoban2.Undo();
+        await Task.Delay(100);
     }
 }

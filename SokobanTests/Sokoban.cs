@@ -57,9 +57,5 @@ public class Sokoban
         return new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), Targets, newBoxes, this);
     }
 
-    public Sokoban Undo()
-    {
-        return previous;
-    }
-
+    public Sokoban Undo() => previous;
 }
