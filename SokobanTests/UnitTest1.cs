@@ -75,4 +75,12 @@ public class Tests
             .Undo()
             .Should().BeNull();
     }
+
+    [Test]
+    public void CantWalkIntoWall()
+    {
+        new Sokoban(wherePlayerIs: (0, 0), targets: new[] { (1, 1) }, boxes: new[] { (1, 1) }, walls: new[] { (1, 0) })
+            .MoveTowards((1, 0))
+            .WherePlayerIs.Should().Be((0, 0));
+    }
 }
