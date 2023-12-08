@@ -75,9 +75,9 @@ public class Sokoban
     public static Sokoban FromAscii(string ascii)
     {
         return new Sokoban(
-            wherePlayerIs: Utils.SingleValue<(int,int)>(Utils.FindCharactersCoordinates(ascii, "PR")),
-            targets: Utils.FindCharactersCoordinates(ascii, "X@"),
-            boxes: Utils.FindCharactersCoordinates(ascii, "O@"),
+            wherePlayerIs: Utils.SingleValue<(int,int)>(Utils.FindCharactersCoordinates(ascii, "Pp")),
+            targets: Utils.FindCharactersCoordinates(ascii, "O@"),
+            boxes: Utils.FindCharactersCoordinates(ascii, "*@"),
             walls: Utils.FindCharactersCoordinates(ascii, "#")
         );
     }

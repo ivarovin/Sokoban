@@ -119,16 +119,19 @@ public class Tests
         action.Should().Throw<ArgumentException>().WithMessage("Input is not a rectangle.");
     }
 
-    // [Test]
-    // public void FromAscii()
-    // {
-    //     var sut = Sokoban.FromAscii(@"
-    //         .#P
-    //         *O@
-    //     ");
+    [Test]
+    public void FromAscii()
+    {
+        var sut = Sokoban.FromAscii(@"
+            .#P
+            *O@
+        ");
 
-    //     sut.WherePlayerIs.Should().Be((0, 0));
-    // }
+        sut.WherePlayerIs.Should().Be((2, 0));
+        sut.Walls.Should().BeEquivalentTo(new[] {(1,0)});
+        sut.Boxes.Should().BeEquivalentTo(new[] {(0,1), (2,1)});
+        sut.Targets.Should().BeEquivalentTo(new[] {(1,1), (2,1)});
+    }
 }
 
 // ####..
