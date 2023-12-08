@@ -11,6 +11,56 @@ namespace SokobanTests;
 public class Tests
 {
     [Test]
+    public void SimpleLevel()
+    {
+        Sokoban.FromAscii(@"
+            #####
+            #P*O#
+            #####
+        ")
+            .MoveTowards((1,0))
+            .IsSolved.Should().BeTrue();
+
+    }
+
+    [Test]
+    public void SampleLevel()
+    {
+        (int, int) right = (1,0);
+        (int, int) left = (-1,0);
+        (int, int) down = (0,1);
+        (int, int) up = (0,-1);
+
+        // Microban 1, by David Skinner
+        var sut = Sokoban.FromAscii(@"
+            ####..
+            #.O#..
+            #..###
+            #@P..#
+            #..*.#
+            #..###
+            ####..
+        ");
+
+        var solution = new[] {
+            down, left, up, 
+            right, right, right, down, left, 
+            up, left, left, down, down, right, up,
+            left, up, right,
+            up, up, left, down,
+            right, down, down, right, right, up, left,
+            down, left, up, up 
+        };
+
+        foreach (var move in solution)
+        {
+            sut.IsSolved.Should().BeFalse();     
+            sut = sut.MoveTowards(move);
+        }
+        sut.IsSolved.Should().BeTrue();
+    }
+
+    [Test]
     public void Spawn_Player()
     {
         var sut = new Sokoban((1, 1));
@@ -133,11 +183,3 @@ public class Tests
         sut.Targets.Should().BeEquivalentTo(new[] {(1,1), (2,1)});
     }
 }
-
-// ####..
-// #.O#..
-// #..###
-// #@P..#
-// #..*.#
-// #..###
-// ####..
