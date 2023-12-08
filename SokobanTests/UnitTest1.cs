@@ -29,8 +29,8 @@ public class Tests
     [Test]
     public void LoseGame()
     {
-        new Sokoban((10,0), targets: new[] { (0, 0) }, boxes: new[] { (1, 0) }).IsSolved.Should().BeFalse();
-        new Sokoban((10,0), targets: new[] { (0, 0), (1, 0) }, boxes: new[] { (0, 0), (2, 0) }).IsSolved.Should().BeFalse();
+        new Sokoban((10, 0), targets: new[] { (0, 0) }, boxes: new[] { (1, 0) }).IsSolved.Should().BeFalse();
+        new Sokoban((10, 0), targets: new[] { (0, 0), (1, 0) }, boxes: new[] { (0, 0), (2, 0) }).IsSolved.Should().BeFalse();
     }
 
     [Test]
@@ -91,4 +91,48 @@ public class Tests
             .MoveTowards((1, 0))
             .WherePlayerIs.Should().Be((0, 0));
     }
+
+    [Test]
+    public void FindAsciiCoordinates()
+    {
+        string asciiRectangle = @"
+            A....
+            .BBB.
+            .....
+        ";
+
+        Utils.FindCharacterCoordinates(asciiRectangle, 'A').Should().BeEquivalentTo(new[] { (0, 0) });
+        Utils.FindCharacterCoordinates(asciiRectangle, 'B').Should().BeEquivalentTo(new[] { (1, 1), (2, 1), (3, 1) });
+    }
+
+    [Test]
+    public void EnsuresRectangle()
+    {
+        string badRectangle = @"
+            .....
+            ..
+        ";
+
+        Action action = () => Utils.FindCharacterCoordinates(badRectangle, '.');
+        action.Should().Throw<ArgumentException>().WithMessage("Input is not a rectangle.");
+    }
+
+    // [Test]
+    // public void FromAscii()
+    // {
+    //     var sut = Sokoban.FromAscii(@"
+    //         .#P
+    //         *O@
+    //     ");
+
+    //     sut.WherePlayerIs.Should().Be((0, 0));
+    // }
 }
+
+// ####..
+// #.O#..
+// #..###
+// #@P..#
+// #..*.#
+// #..###
+// ####..

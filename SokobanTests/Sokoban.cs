@@ -70,4 +70,45 @@ public class Sokoban
         return previous;
     }
 
+    public static Sokoban FromAscii(string ascii)
+    {
+
+        return new Sokoban((0,0));
+    }
+}
+
+public class Utils
+{
+    public static List<(int, int)> FindCharacterCoordinates(string asciiRectangle, char searchChar)
+    {
+        List<(int, int)> coordinates = new List<(int, int)>();
+
+        string[] lines = asciiRectangle.Trim().Split('\n');
+
+        int width = -1; // Initializing width to an impossible value
+
+        for (int i = 0; i < lines.Length; i++)
+        {
+            lines[i] = lines[i].Trim(); // Trim each line
+
+            if (width == -1)
+            {
+                width = lines[i].Length; // Set width for the first line
+            }
+            else if (lines[i].Length != width)
+            {
+                throw new ArgumentException("Input is not a rectangle.");
+            }
+
+            for (int j = 0; j < lines[i].Length; j++)
+            {
+                if (lines[i][j] == searchChar)
+                {
+                    coordinates.Add((j, i)); // (x, y) coordinates
+                }
+            }
+        }
+
+        return coordinates;
+    }
 }
