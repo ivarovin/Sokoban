@@ -101,8 +101,10 @@ public class Tests
             .....
         ";
 
-        Utils.FindCharacterCoordinates(asciiRectangle, 'A').Should().BeEquivalentTo(new[] { (0, 0) });
-        Utils.FindCharacterCoordinates(asciiRectangle, 'B').Should().BeEquivalentTo(new[] { (1, 1), (2, 1), (3, 1) });
+        Utils.FindCharactersCoordinates(asciiRectangle, "A").Should().BeEquivalentTo(new[] { (0, 0) });
+        Utils.FindCharactersCoordinates(asciiRectangle, "B").Should().BeEquivalentTo(new[] { (1, 1), (2, 1), (3, 1) });
+        Utils.FindCharactersCoordinates(asciiRectangle, "AB").Should().BeEquivalentTo(new[] { (0,0), (1, 1), (2, 1), (3, 1) });
+        Utils.FindCharactersCoordinates(asciiRectangle, "X").Should().BeEquivalentTo(Array.Empty<(int,int)>());
     }
 
     [Test]
@@ -113,7 +115,7 @@ public class Tests
             ..
         ";
 
-        Action action = () => Utils.FindCharacterCoordinates(badRectangle, '.');
+        Action action = () => Utils.FindCharactersCoordinates(badRectangle, ".");
         action.Should().Throw<ArgumentException>().WithMessage("Input is not a rectangle.");
     }
 

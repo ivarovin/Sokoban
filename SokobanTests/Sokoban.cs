@@ -1,3 +1,5 @@
+using FluentAssertions;
+
 namespace SokobanTests;
 
 public class Sokoban
@@ -72,14 +74,18 @@ public class Sokoban
 
     public static Sokoban FromAscii(string ascii)
     {
-
-        return new Sokoban((0,0));
+        return new Sokoban(
+            wherePlayerIs: Utils.SingleValue<(int,int)>(Utils.FindCharactersCoordinates(ascii, "PR")),
+            targets: Utils.FindCharactersCoordinates(ascii, "X@"),
+            boxes: Utils.FindCharactersCoordinates(ascii, "O@"),
+            walls: Utils.FindCharactersCoordinates(ascii, "#")
+        );
     }
 }
 
 public class Utils
 {
-    public static List<(int, int)> FindCharacterCoordinates(string asciiRectangle, char searchChar)
+    public static (int, int)[] FindCharactersCoordinates(string asciiRectangle, string searchChars)
     {
         List<(int, int)> coordinates = new List<(int, int)>();
 
@@ -102,13 +108,21 @@ public class Utils
 
             for (int j = 0; j < lines[i].Length; j++)
             {
-                if (lines[i][j] == searchChar)
+                if (searchChars.Contains(lines[i][j]))
                 {
                     coordinates.Add((j, i)); // (x, y) coordinates
                 }
             }
         }
 
-        return coordinates;
+        return coordinates.ToArray();
+    }
+
+    public static T SingleValue<T>(T[] arr) {
+        if (arr.Length != 1)
+        {
+            throw new ArgumentException("Array does not have exactly 1 element.");
+        }
+        return arr[0];
     }
 }
