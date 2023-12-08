@@ -16,23 +16,16 @@ public class Sokoban
         this.previous = previous;
     }
 
-    public Sokoban((int, int) wherePlayerIs, (int, int)[] targets, (int, int)[] boxes, (int, int)[] walls)
-        : this(wherePlayerIs, targets, boxes)
+    public Sokoban((int, int) wherePlayerIs, (int, int)[] targets = null, (int, int)[] boxes = null, (int, int)[] walls = null)
     {
-        this.Walls = walls;
-    }
+        targets ??= Array.Empty<(int, int)>();
+        boxes ??= Array.Empty<(int, int)>();
+        walls ??= Array.Empty<(int, int)>();
 
-    public Sokoban((int, int) wherePlayerIs, (int, int)[] targets, (int, int)[] boxes)
-        : this(targets, boxes)
-    {
+        if (walls.Contains(wherePlayerIs))
+            throw new ArgumentException("Player cannot be in a wall");
         if (boxes.Contains(wherePlayerIs))
             throw new ArgumentException("Player cannot be in a box");
-
-        WherePlayerIs = wherePlayerIs;
-    }
-
-    public Sokoban((int, int)[] targets, (int, int)[] boxes)
-    {
         if (targets.Length != boxes.Length)
             throw new ArgumentException("Targets and boxes must have the same length");
         if (targets.Distinct().Count() != targets.Length)
@@ -40,6 +33,8 @@ public class Sokoban
         if (boxes.Distinct().Count() != boxes.Length)
             throw new ArgumentException("Boxes must be unique");
 
+        this.WherePlayerIs = wherePlayerIs;
+        this.Walls = walls;
         this.Targets = targets;
         this.Boxes = boxes;
     }

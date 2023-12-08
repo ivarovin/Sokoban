@@ -13,14 +13,14 @@ public class Tests
     [Test]
     public void LoseGame()
     {
-        new Sokoban(targets: new[] { (0, 0) }, boxes: new[] { (1, 0) }).IsSolved.Should().BeFalse();
-        new Sokoban(targets: new[] { (0, 0), (1, 0) }, boxes: new[] { (0, 0), (2, 0) }).IsSolved.Should().BeFalse();
+        new Sokoban((10,0), targets: new[] { (0, 0) }, boxes: new[] { (1, 0) }).IsSolved.Should().BeFalse();
+        new Sokoban((10,0), targets: new[] { (0, 0), (1, 0) }, boxes: new[] { (0, 0), (2, 0) }).IsSolved.Should().BeFalse();
     }
 
     [Test]
     public void SolveGame()
     {
-        var sut = new Sokoban(new[] { (0, 0) }, new[] { (0, 0) });
+        var sut = new Sokoban((10, 0), new[] { (0, 0) }, new[] { (0, 0) });
 
         sut.IsSolved.Should().BeTrue();
     }
