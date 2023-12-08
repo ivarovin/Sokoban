@@ -11,6 +11,22 @@ namespace SokobanTests;
 public class Tests
 {
     [Test]
+    public void Spawn_Player()
+    {
+        var sut = new Sokoban((1, 1));
+
+        sut.WherePlayerIs.Should().Be((1, 1));
+    }
+
+    [Test]
+    public void Move_Player()
+    {
+        new Sokoban((0, 0))
+            .MoveTowards((1, 0))
+            .WherePlayerIs.Should().Be((1, 0));
+    }
+
+    [Test]
     public void LoseGame()
     {
         new Sokoban((10,0), targets: new[] { (0, 0) }, boxes: new[] { (1, 0) }).IsSolved.Should().BeFalse();
@@ -23,22 +39,6 @@ public class Tests
         var sut = new Sokoban((10, 0), new[] { (0, 0) }, new[] { (0, 0) });
 
         sut.IsSolved.Should().BeTrue();
-    }
-
-    [Test]
-    public void Spawn_Player()
-    {
-        var sut = new Sokoban((1, 1), new[] { (0, 0) }, new[] { (0, 0) });
-
-        sut.WherePlayerIs.Should().Be((1, 1));
-    }
-
-    [Test]
-    public void Move_Player()
-    {
-        new Sokoban((0, 0), targets: new[] { (0, 0) }, boxes: new[] { (2, 0) })
-            .MoveTowards((1, 0))
-            .WherePlayerIs.Should().Be((1, 0));
     }
 
     [Test]
