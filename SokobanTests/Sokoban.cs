@@ -59,6 +59,8 @@ public class Sokoban
 
     Sokoban PushBoxTowards((int x, int y) direction)
     {
+        if (IsWallAt((WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2)))
+            return this;
         if (IsBoxAt((WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2)))
             return this;
 

@@ -83,4 +83,12 @@ public class Tests
             .MoveTowards((1, 0))
             .WherePlayerIs.Should().Be((0, 0));
     }
+
+    [Test]
+    public void CantPushIntoWall()
+    {
+        new Sokoban(wherePlayerIs: (0, 0), targets: new[] { (1, 1) }, boxes: new[] { (1, 0) }, walls: new[] { (2, 0) })
+            .MoveTowards((1, 0))
+            .WherePlayerIs.Should().Be((0, 0));
+    }
 }
