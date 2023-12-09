@@ -1,10 +1,21 @@
-﻿using System;
+﻿using SokobanTests;
+using System;
 using System.Collections.Generic;
 
 class Game
 {
-    public static readonly string Title = "Minimalist Game Framework";
-    public static readonly Vector2 Resolution = new Vector2(128, 128);
+    public static readonly string Title = "Sokoban";
+    public static readonly Vector2 Resolution = new Vector2(512, 512);
+
+    Sokoban cur_state = Sokoban.FromAscii(@"
+        ####..
+        #.O#..
+        #..###
+        #@P..#
+        #..*.#
+        #..###
+        ####..
+    ");
 
     // Define some constants controlling animation speed:
     static readonly float Framerate = 10;
@@ -26,7 +37,7 @@ class Game
     public void Update()
     {
         // Draw the background:
-        Engine.DrawTexture(texBackground, Vector2.Zero);
+        Engine.DrawTexture(texBackground, Vector2.Zero, size: Game.Resolution, scaleMode: TextureScaleMode.Nearest);
 
         // Use the keyboard to control the knight:
         Vector2 moveOffset = Vector2.Zero;
