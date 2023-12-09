@@ -17,58 +17,75 @@ class Game
         ####..
     ");
 
-    // Define some constants controlling animation speed:
-    static readonly float Framerate = 10;
-    static readonly float WalkSpeed = 50;
+    float tile_size = 64;
+    Vector2 offset = Vector2.Zero;
 
     // Load some textures when the game starts:
-    Texture texKnight = Engine.LoadTexture("knight.png");
-    Texture texBackground = Engine.LoadTexture("background.png");
+    class Textures
+    {
+        public Texture player = Engine.LoadTexture("player.png");
+        public Texture floor = Engine.LoadTexture("floor.png");
+        public Texture wall = Engine.LoadTexture("wall.png");
+        public Texture crate = Engine.LoadTexture("crate.png");
+        public Texture target = Engine.LoadTexture("target.png");
+    }
+    readonly Textures textures = new Textures();
 
-    // Keep track of the knight's state:
-    Vector2 knightPosition = Resolution / 2;
-    bool knightFaceLeft = false;
-    float knightFrameIndex = 0;
 
     public Game()
     {
     }
 
+    void DrawTile(Texture texture, Vector2 position)
+    {
+        Engine.DrawTexture(texture, position * tile_size + offset, size: new Vector2(tile_size, tile_size));
+    }
+
     public void Update()
     {
-        // Draw the background:
-        Engine.DrawTexture(texBackground, Vector2.Zero, size: Game.Resolution, scaleMode: TextureScaleMode.Nearest);
+        for (int y = 0; y < cur_state.LevelSize.y; y++)
+        {
+            for (int x = 0; x < cur_state.LevelSize.x; x++)
+            {
+                var pos = new Vector2(x, y);
+                DrawTile(textures.floor, pos);
+                if (cur_state.Walls.Contains((x, y)))
+                    DrawTile(textures.wall, pos);
+                if (cur_state.Targets.Contains((x, y)))
+                    DrawTile(textures.target, pos);
+                if (cur_state.Boxes.Contains((x, y)))
+                    DrawTile(textures.crate, pos);
+                if (cur_state.WherePlayerIs == (x, y))
+                    DrawTile(textures.player, pos);
+            }
+        }
 
-        // Use the keyboard to control the knight:
-        Vector2 moveOffset = Vector2.Zero;
-        if (Engine.GetKeyHeld(Key.Left))
+        int dx = 0;
+        int dy = 0;
+        if (Engine.GetKeyDown(Key.Left))
         {
-            moveOffset.X -= 1;
-            knightFaceLeft = true;
+            dx = -1;
         }
-        if (Engine.GetKeyHeld(Key.Right))
+        else if (Engine.GetKeyDown(Key.Right))
         {
-            moveOffset.X += 1;
-            knightFaceLeft = false;
+            dx = 1;
         }
-        if (Engine.GetKeyHeld(Key.Up))
+        else if (Engine.GetKeyDown(Key.Up))
         {
-            moveOffset.Y -= 1;
+            dy = -1;
         }
-        if (Engine.GetKeyHeld(Key.Down))
+        else if (Engine.GetKeyDown(Key.Down))
         {
-            moveOffset.Y += 1;
+            dy = 1;
         }
-        knightPosition += moveOffset * WalkSpeed * Engine.TimeDelta;
+        if (dx != 0 || dy != 0)
+        {
+            cur_state = cur_state.MoveTowards((dx, dy));
+        }
 
-        // Advance through the knight's 6-frame animation and select the current frame:
-        knightFrameIndex = (knightFrameIndex + Engine.TimeDelta * Framerate) % 6.0f;
-        bool knightIdle = moveOffset.Length() == 0;
-        Bounds2 knightFrameBounds = new Bounds2(((int)knightFrameIndex) * 16, knightIdle ? 0 : 16, 16, 16);
-
-        // Draw the knight:
-        Vector2 knightDrawPos = knightPosition + new Vector2(-8, -8);
-        TextureMirror knightMirror = knightFaceLeft ? TextureMirror.Horizontal : TextureMirror.None;
-        Engine.DrawTexture(texKnight, knightDrawPos, source: knightFrameBounds, mirror: knightMirror);
+        if (Engine.GetKeyDown(Key.Z))
+        {
+            cur_state = cur_state.Undo();
+        }
     }
 }
