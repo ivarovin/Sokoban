@@ -12,6 +12,15 @@ public class Sokoban
     public bool IsSolved => Targets.All(t => Boxes.Contains(t));
     public (int x, int y) WherePlayerIs { get; }
 
+    public (int x, int y) LevelSize
+    {
+        get
+        {
+            var allPoints = Targets.Concat(Boxes).Concat(Walls).Append(WherePlayerIs);
+            return (1 + allPoints.Max(p => p.Item1), 1 + allPoints.Max(p => p.Item2));
+        }
+    }
+
     public Sokoban((int, int) wherePlayerIs, (int, int)[] targets, (int, int)[] boxes, (int, int)[] walls, Sokoban previous)
         : this(wherePlayerIs, targets, boxes, walls)
     {
@@ -72,7 +81,7 @@ public class Sokoban
     public static Sokoban FromAscii(string ascii)
     {
         return new Sokoban(
-            wherePlayerIs: Utils.SingleValue<(int,int)>(Utils.FindCharactersCoordinates(ascii, "Pp")),
+            wherePlayerIs: Utils.SingleValue<(int, int)>(Utils.FindCharactersCoordinates(ascii, "Pp")),
             targets: Utils.FindCharactersCoordinates(ascii, "O@"),
             boxes: Utils.FindCharactersCoordinates(ascii, "*@"),
             walls: Utils.FindCharactersCoordinates(ascii, "#")
@@ -115,7 +124,8 @@ public class Utils
         return coordinates.ToArray();
     }
 
-    public static T SingleValue<T>(T[] arr) {
+    public static T SingleValue<T>(T[] arr)
+    {
         if (arr.Length != 1)
         {
             throw new ArgumentException("Array does not have exactly 1 element.");

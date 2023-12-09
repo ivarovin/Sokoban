@@ -182,4 +182,11 @@ public class Tests
         sut.Boxes.Should().BeEquivalentTo(new[] {(0,1), (2,1)});
         sut.Targets.Should().BeEquivalentTo(new[] {(1,1), (2,1)});
     }
+
+    [Test]
+    public void LevelSize()
+    {
+        new Sokoban((0,0), targets: new[]{(10, 0)}, boxes: new[]{(0, 10)})
+            .LevelSize.Should().Be((11, 11));
+    }
 }

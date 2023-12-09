@@ -35,9 +35,9 @@ void Render(Sokoban sokoban1)
 {
     Console.Clear();
 
-    for (int y = 0; y < 10; y++)
+    for (int y = 0; y < sokoban1.LevelSize.y; y++)
     {
-        for (int x = 0; x < 10; x++)
+        for (int x = 0; x < sokoban1.LevelSize.x; x++)
         {
             if (sokoban1.WherePlayerIs == (x, y))
                 Console.Write("P");
