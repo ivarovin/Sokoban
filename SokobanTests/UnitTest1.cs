@@ -145,7 +145,7 @@ public class Tests
     {
         new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
             .Undo()
-            .Should().BeNull();
+            .WherePlayerIs.Should().Be((Position)(0, 0));
     }
 
     [Test]
