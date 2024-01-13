@@ -21,6 +21,8 @@ public class Sokoban
         }
     }
 
+    public Movement PlayerMovement => Movement.Between(previous.WherePlayerIs, WherePlayerIs);
+
     public Sokoban(Position wherePlayerIs, Position[] targets, Position[] boxes, Position[] walls,
         Sokoban previous)
         : this(wherePlayerIs, targets, boxes, walls)

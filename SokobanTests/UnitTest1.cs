@@ -81,7 +81,7 @@ public class Tests
     {
         new Sokoban((4, 4))
             .MoveTowards((1, 0))
-            .PlayerMovement.Should().Be((Movement)(1,0));
+            .PlayerMovement.Should().Be(Movement.Between((4,4), (5,4)));
     }
 
     [Test]
