@@ -89,7 +89,7 @@ class Game
             }
         }
 
-        turn_progress += Engine.TimeDelta / turn_duration;
+        turn_progress += (Engine.TimeDelta / turn_duration) * MathF.Pow(2f, pendingInputs.Count);
         turn_progress = Utils.Clamp01(turn_progress);
 
         DrawTile(textures.player, Vector2.Lerp(cur_state.PlayerMovement.from.ToVector2(), cur_state.PlayerMovement.to.ToVector2(), turn_progress));
@@ -104,7 +104,7 @@ class Game
                 }
         }
 
-        if (pendingInputs.Count > 0)
+        if (turn_progress == 1f && pendingInputs.Count > 0)
         {
             var playerInput = pendingInputs.Dequeue();
 
