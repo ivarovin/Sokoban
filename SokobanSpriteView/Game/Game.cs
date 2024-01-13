@@ -41,6 +41,27 @@ class Game
 
     readonly Textures textures = new Textures();
 
+    // What can the player do?
+    enum PlayerInput
+    {
+        Left,
+        Right,
+        Up,
+        Down,
+        Undo,
+        Restart,
+    };
+
+    Queue<PlayerInput> pendingInputs = new Queue<PlayerInput>();
+
+    (Key[], PlayerInput)[] keymap = new[] {
+        (new[] {Key.Left, Key.A}, PlayerInput.Left),
+        (new[] {Key.Right, Key.D}, PlayerInput.Right),
+        (new[] {Key.Up, Key.W}, PlayerInput.Up),
+        (new[] {Key.Down, Key.S}, PlayerInput.Down),
+        (new[] {Key.Z}, PlayerInput.Undo),
+        (new[] {Key.R}, PlayerInput.Restart),
+    };
 
     public Game()
     {
@@ -73,39 +94,57 @@ class Game
 
         DrawTile(textures.player, Vector2.Lerp(cur_state.PlayerMovement.from.ToVector2(), cur_state.PlayerMovement.to.ToVector2(), turn_progress));
 
-        int dx = 0;
-        int dy = 0;
-        if (Engine.GetKeyDown(Key.Left))
+        foreach (var (keys, action) in keymap)
         {
-            dx = -1;
-        }
-        else if (Engine.GetKeyDown(Key.Right))
-        {
-            dx = 1;
-        }
-        else if (Engine.GetKeyDown(Key.Up))
-        {
-            dy = -1;
-        }
-        else if (Engine.GetKeyDown(Key.Down))
-        {
-            dy = 1;
+            foreach (Key key in keys)
+
+                if (Engine.GetKeyDown(key))
+                {
+                    pendingInputs.Enqueue(action);
+                }
         }
 
-        if (dx != 0 || dy != 0)
+        if (pendingInputs.Count > 0)
         {
-            cur_state = cur_state.MoveTowards((dx, dy));
-            turn_progress = 0f;
-        }
+            var playerInput = pendingInputs.Dequeue();
 
-        if (Engine.GetKeyDown(Key.Z))
-        {
-            cur_state = cur_state.Undo();
+            switch (playerInput)
+            {
+                case PlayerInput.Undo:
+                    cur_state = cur_state.Undo();
+                    break;
+                case PlayerInput.Restart:
+                    cur_state = cur_state.Restart();
+                    break;
+                case PlayerInput.Left:
+                case PlayerInput.Right:
+                case PlayerInput.Up:
+                case PlayerInput.Down:
+                    Vector2 moveDirection = this.DirectionFromInput(playerInput);
+                    cur_state = cur_state.MoveTowards(((int)moveDirection.X, (int)moveDirection.Y));
+                    turn_progress = 0f;
+                    break;
+            }
         }
+    }
 
-        if (Engine.GetKeyDown(Key.R))
+    private Vector2 DirectionFromInput(PlayerInput playerInput)
+    {
+
+        switch (playerInput)
         {
-            cur_state = cur_state.Restart();
+            case PlayerInput.Left:
+                return new Vector2(-1,0);
+            case PlayerInput.Right:
+                return new Vector2(1,0);
+            case PlayerInput.Up:
+                return new Vector2(0,-1);
+            case PlayerInput.Down:
+                return new Vector2(0,1);
+            case PlayerInput.Undo:
+            case PlayerInput.Restart:
+            default:
+                throw new ArgumentException();
         }
     }
 }
