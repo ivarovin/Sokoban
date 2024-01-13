@@ -83,6 +83,7 @@ public class Sokoban
     }
 
     public Sokoban Undo() => previous;
+    public Sokoban Restart() => this.previous == null ? this : this.previous.Restart();
 
     public static Sokoban FromAscii(string ascii)
     {

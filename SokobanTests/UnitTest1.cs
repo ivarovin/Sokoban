@@ -149,6 +149,25 @@ public class Tests
     }
 
     [Test]
+    public void Restart()
+    {
+        new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
+            .MoveTowards((1, 0))
+            .MoveTowards((1, 0))
+            .MoveTowards((1, 0))
+            .Restart()
+            .WherePlayerIs.Should().Be((Position)(0, 0));
+    }
+
+    [Test]
+    public void RestartFirst()
+    {
+        new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
+            .Restart()
+            .WherePlayerIs.Should().Be((Position)(0, 0));
+    }
+
+    [Test]
     public void CantWalkIntoWall()
     {
         new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (1, 0) })

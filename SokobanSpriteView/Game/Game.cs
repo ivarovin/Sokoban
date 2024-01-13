@@ -102,6 +102,11 @@ class Game
         {
             cur_state = cur_state.Undo();
         }
+
+        if (Engine.GetKeyDown(Key.R))
+        {
+            cur_state = cur_state.Restart();
+        }
     }
 }
 
