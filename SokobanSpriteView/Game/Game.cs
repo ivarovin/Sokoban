@@ -22,8 +22,12 @@ class Game
         ####..
     ");
 
+    float turn_duration = .2f;
     float tile_size = 64;
     Vector2 offset = Vector2.Zero;
+
+    // Always in the [0, 1] range; 0 right after starting a turn, grows to 1 over the course of turn_duration seconds.
+    float turn_progress = 1f;
 
     // Load some textures when the game starts:
     class Textures
@@ -64,8 +68,10 @@ class Game
             }
         }
 
-        DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2());
-        DrawTile(textures.player,Vector2.Lerp(cur_state.PlayerMovement.from, cur_state.PlayerMovement.to, TurnTime));
+        turn_progress += Engine.TimeDelta / turn_duration;
+        turn_progress = Utils.Clamp01(turn_progress);
+
+        DrawTile(textures.player, Vector2.Lerp(cur_state.PlayerMovement.from.ToVector2(), cur_state.PlayerMovement.to.ToVector2(), turn_progress));
 
         int dx = 0;
         int dy = 0;
@@ -89,11 +95,23 @@ class Game
         if (dx != 0 || dy != 0)
         {
             cur_state = cur_state.MoveTowards((dx, dy));
+            turn_progress = 0f;
         }
 
         if (Engine.GetKeyDown(Key.Z))
         {
             cur_state = cur_state.Undo();
         }
+    }
+}
+
+class Utils
+{
+
+    public static float Clamp01(float value)
+    {
+        if (value < 0f) return 0f;
+        if (value > 1f) return 1f;
+        return value;
     }
 }
