@@ -85,6 +85,12 @@ public class Tests
     }
 
     [Test]
+    public void Retrieve_MovedBoxes_FromLastTick()
+    {
+        //Obtener todas las cajas que se movieron en el último tick
+    }
+
+    [Test]
     public void Movement_IsNone_AtStart()
     {
         new Sokoban((5, 5))
