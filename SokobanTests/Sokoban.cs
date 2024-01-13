@@ -10,7 +10,7 @@ public class Sokoban
     public readonly Position[] Walls;
 
     public bool IsSolved => Targets.All(t => Boxes.Contains(t));
-    public (int x, int y) WherePlayerIs { get; }
+    public Position WherePlayerIs { get; }
 
     public (int x, int y) LevelSize
     {
@@ -62,9 +62,9 @@ public class Sokoban
                     this);
     }
 
-    bool IsWallAt((int x, int y) position) => Walls.Contains(position);
+    bool IsWallAt(Position position) => Walls.Contains(position);
 
-    bool IsBoxAt((int x, int y) position) => Boxes.Contains((position.x, position.y));
+    bool IsBoxAt(Position position) => Boxes.Contains((position.x, position.y));
 
     Sokoban PushBoxTowards((int x, int y) direction)
     {
