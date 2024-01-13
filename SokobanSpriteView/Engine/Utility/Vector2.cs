@@ -125,4 +125,6 @@ struct Vector2
     {
         return new Vector2(v.X / s, v.Y / s);
     }
+
+    public static Vector2 Lerp(Vector2 from, Vector2 to, float t) => from + t * (to - from);
 }
