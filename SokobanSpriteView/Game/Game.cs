@@ -2,8 +2,9 @@
 using System;
 using System.Collections.Generic;
 
-public static class PositionConversions {
-
+static class PositionConversions
+{
+    public static Vector2 ToVector2(this Position p) => new Vector2(p.x, p.y);
 }
 
 class Game
@@ -33,6 +34,7 @@ class Game
         public Texture crate = Engine.LoadTexture("crate.png");
         public Texture target = Engine.LoadTexture("target.png");
     }
+
     readonly Textures textures = new Textures();
 
 
@@ -59,11 +61,11 @@ class Game
                     DrawTile(textures.target, pos);
                 if (cur_state.Boxes.Contains((Position)(x, y)))
                     DrawTile(textures.crate, pos);
-                // if (cur_state.WherePlayerIs.Equals((Position)(x, y)))
-                //     DrawTile(textures.player, pos);
             }
         }
-        DrawTile(textures.player, cur_state.WherePlayerIs);
+
+        DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2());
+        DrawTile(textures.player,Vector2.Lerp(cur_state.PlayerMovement.from, cur_state.PlayerMovement.to, TurnTime));
 
         int dx = 0;
         int dy = 0;
@@ -83,6 +85,7 @@ class Game
         {
             dy = 1;
         }
+
         if (dx != 0 || dy != 0)
         {
             cur_state = cur_state.MoveTowards((dx, dy));
