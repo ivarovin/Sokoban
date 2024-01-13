@@ -2,6 +2,10 @@
 using System;
 using System.Collections.Generic;
 
+public static class PositionConversions {
+
+}
+
 class Game
 {
     public static readonly string Title = "Sokoban";
@@ -55,10 +59,11 @@ class Game
                     DrawTile(textures.target, pos);
                 if (cur_state.Boxes.Contains((Position)(x, y)))
                     DrawTile(textures.crate, pos);
-                if (cur_state.WherePlayerIs.Equals((Position)(x, y)))
-                    DrawTile(textures.player, pos);
+                // if (cur_state.WherePlayerIs.Equals((Position)(x, y)))
+                //     DrawTile(textures.player, pos);
             }
         }
+        DrawTile(textures.player, cur_state.WherePlayerIs);
 
         int dx = 0;
         int dy = 0;
