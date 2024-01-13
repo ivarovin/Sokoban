@@ -79,9 +79,9 @@ public class Tests
     [Test]
     public void safasfas()
     {
-        new Sokoban((0, 0))
+        new Sokoban((4, 4))
             .MoveTowards((1, 0))
-            .WherePlayerIs.Should().Be((Position)(1, 0));
+            .PlayerMovement.Should().Be((Movement)(1,0));
     }
 
     [Test]
