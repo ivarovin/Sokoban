@@ -49,13 +49,13 @@ class Game
             {
                 var pos = new Vector2(x, y);
                 DrawTile(textures.floor, pos);
-                if (cur_state.Walls.Contains((x, y)))
+                if (cur_state.Walls.Contains((Position)(x, y)))
                     DrawTile(textures.wall, pos);
-                if (cur_state.Targets.Contains((x, y)))
+                if (cur_state.Targets.Contains((Position)(x, y)))
                     DrawTile(textures.target, pos);
-                if (cur_state.Boxes.Contains((x, y)))
+                if (cur_state.Boxes.Contains((Position)(x, y)))
                     DrawTile(textures.crate, pos);
-                if (cur_state.WherePlayerIs == (x, y))
+                if (cur_state.WherePlayerIs.Equals((Position)(x, y)))
                     DrawTile(textures.player, pos);
             }
         }
