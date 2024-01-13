@@ -77,11 +77,19 @@ public class Tests
     }
 
     [Test]
-    public void safasfas()
+    public void Retrieve_PreviousPlayerMovement()
     {
         new Sokoban((4, 4))
             .MoveTowards((1, 0))
             .PlayerMovement.Should().Be(Movement.Between((4,4), (5,4)));
+    }
+
+    [Test]
+    public void Movement_IsNone_AtStart()
+    {
+        new Sokoban((5, 5))
+            .PlayerMovement
+            .Should().Be(Movement.Between((4, 4), (5, 4)));
     }
 
     [Test]
