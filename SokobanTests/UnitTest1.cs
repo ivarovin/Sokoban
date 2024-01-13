@@ -77,6 +77,14 @@ public class Tests
     }
 
     [Test]
+    public void safasfas()
+    {
+        new Sokoban((0, 0))
+            .MoveTowards((1, 0))
+            .WherePlayerIs.Should().Be((Position)(1, 0));
+    }
+
+    [Test]
     public void LoseGame()
     {
         new Sokoban((10, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (1, 0) }).IsSolved.Should().BeFalse();
