@@ -89,7 +89,7 @@ public class Tests
     {
         new Sokoban((5, 5))
             .PlayerMovement
-            .Should().Be(Movement.Between((4, 4), (5, 4)));
+            .Should().Be(Movement.Between((5, 5), (5, 5)));
     }
 
     [Test]
