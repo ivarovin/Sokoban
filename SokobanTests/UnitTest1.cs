@@ -65,7 +65,7 @@ public class Tests
     {
         var sut = new Sokoban((1, 1));
 
-        sut.WherePlayerIs.Should().Be((1, 1));
+        sut.WherePlayerIs.Should().Be((Position)(1, 1));
     }
 
     [Test]
@@ -73,7 +73,7 @@ public class Tests
     {
         new Sokoban((0, 0))
             .MoveTowards((1, 0))
-            .WherePlayerIs.Should().Be((1, 0));
+            .WherePlayerIs.Should().Be((Position)(1, 0));
     }
 
     [Test]
@@ -97,7 +97,7 @@ public class Tests
         var sut = new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (1, 0) })
             .MoveTowards((1, 0));
 
-        sut.WherePlayerIs.Should().Be((1, 0));
+        sut.WherePlayerIs.Should().Be((Position)(1, 0));
         sut.Boxes.First().Should().Be((Position)(2, 0));
     }
 
@@ -106,7 +106,7 @@ public class Tests
     {
         new Sokoban((0, 0), targets: new Position[] { (0, 0), (1, 0) }, boxes: new Position[] { (1, 0), (2, 0) })
             .MoveTowards((1, 0))
-            .WherePlayerIs.Should().Be((0, 0));
+            .WherePlayerIs.Should().Be((Position)(0, 0));
     }
 
     [Test]
@@ -115,7 +115,7 @@ public class Tests
         new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
             .Undo()
-            .WherePlayerIs.Should().Be((0, 0));
+            .WherePlayerIs.Should().Be((Position)(0, 0));
     }
 
     [Test]
@@ -131,7 +131,7 @@ public class Tests
     {
         new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (1, 0) })
             .MoveTowards((1, 0))
-            .WherePlayerIs.Should().Be((0, 0));
+            .WherePlayerIs.Should().Be((Position)(0, 0));
     }
 
     [Test]
@@ -139,7 +139,7 @@ public class Tests
     {
         new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
-            .WherePlayerIs.Should().Be((0, 0));
+            .WherePlayerIs.Should().Be((Position)(0, 0));
     }
 
     [Test]
@@ -177,7 +177,7 @@ public class Tests
             *O@
         ");
 
-        sut.WherePlayerIs.Should().Be((2, 0));
+        sut.WherePlayerIs.Should().Be((Position)(2, 0));
         sut.Walls.Should().BeEquivalentTo(new Position[] {(1,0)});
         sut.Boxes.Should().BeEquivalentTo(new Position[] {(0,1), (2,1)});
         sut.Targets.Should().BeEquivalentTo(new Position[] {(1,1), (2,1)});
@@ -187,6 +187,6 @@ public class Tests
     public void LevelSize()
     {
         new Sokoban((0,0), targets: new Position[]{(10, 0)}, boxes: new Position[]{(0, 10)})
-            .LevelSize.Should().Be((11, 11));
+            .LevelSize.Should().Be((Position)(11, 11));
     }
 }
