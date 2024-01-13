@@ -42,7 +42,7 @@ public class Tests
             ####..
         ");
 
-        var solution = new[] {
+        var solution = new Position[] {
             down, left, up, 
             right, right, right, down, left, 
             up, left, left, down, down, right, up,
@@ -79,14 +79,14 @@ public class Tests
     [Test]
     public void LoseGame()
     {
-        new Sokoban((10, 0), targets: new[] { (0, 0) }, boxes: new[] { (1, 0) }).IsSolved.Should().BeFalse();
-        new Sokoban((10, 0), targets: new[] { (0, 0), (1, 0) }, boxes: new[] { (0, 0), (2, 0) }).IsSolved.Should().BeFalse();
+        new Sokoban((10, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (1, 0) }).IsSolved.Should().BeFalse();
+        new Sokoban((10, 0), targets: new Position[] { (0, 0), (1, 0) }, boxes: new Position[] { (0, 0), (2, 0) }).IsSolved.Should().BeFalse();
     }
 
     [Test]
     public void SolveGame()
     {
-        var sut = new Sokoban((10, 0), new[] { (0, 0) }, new[] { (0, 0) });
+        var sut = new Sokoban((10, 0), new Position[] { (0, 0) }, new Position[] { (0, 0) });
 
         sut.IsSolved.Should().BeTrue();
     }
@@ -94,17 +94,17 @@ public class Tests
     [Test]
     public void Push_Box()
     {
-        var sut = new Sokoban((0, 0), targets: new[] { (0, 0) }, boxes: new[] { (1, 0) })
+        var sut = new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (1, 0) })
             .MoveTowards((1, 0));
 
         sut.WherePlayerIs.Should().Be((1, 0));
-        sut.Boxes.First().Should().Be((2, 0));
+        sut.Boxes.First().Should().Be((Position)(2, 0));
     }
 
     [Test]
     public void PushBox_IsNotPossible_IfThereIsAnotherBehind()
     {
-        new Sokoban((0, 0), targets: new[] { (0, 0), (1, 0) }, boxes: new[] { (1, 0), (2, 0) })
+        new Sokoban((0, 0), targets: new Position[] { (0, 0), (1, 0) }, boxes: new Position[] { (1, 0), (2, 0) })
             .MoveTowards((1, 0))
             .WherePlayerIs.Should().Be((0, 0));
     }
@@ -112,7 +112,7 @@ public class Tests
     [Test]
     public void Undo()
     {
-        new Sokoban((0, 0), targets: new[] { (0, 0) }, boxes: new[] { (2, 0) })
+        new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
             .Undo()
             .WherePlayerIs.Should().Be((0, 0));
@@ -121,7 +121,7 @@ public class Tests
     [Test]
     public void UndoFirst()
     {
-        new Sokoban((0, 0), targets: new[] { (0, 0) }, boxes: new[] { (2, 0) })
+        new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
             .Undo()
             .Should().BeNull();
     }
@@ -129,7 +129,7 @@ public class Tests
     [Test]
     public void CantWalkIntoWall()
     {
-        new Sokoban(wherePlayerIs: (0, 0), targets: new[] { (1, 1) }, boxes: new[] { (1, 1) }, walls: new[] { (1, 0) })
+        new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (1, 0) })
             .MoveTowards((1, 0))
             .WherePlayerIs.Should().Be((0, 0));
     }
@@ -137,7 +137,7 @@ public class Tests
     [Test]
     public void CantPushIntoWall()
     {
-        new Sokoban(wherePlayerIs: (0, 0), targets: new[] { (1, 1) }, boxes: new[] { (1, 0) }, walls: new[] { (2, 0) })
+        new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
             .WherePlayerIs.Should().Be((0, 0));
     }
@@ -151,9 +151,9 @@ public class Tests
             .....
         ";
 
-        Utils.FindCharactersCoordinates(asciiRectangle, "A").Should().BeEquivalentTo(new[] { (0, 0) });
-        Utils.FindCharactersCoordinates(asciiRectangle, "B").Should().BeEquivalentTo(new[] { (1, 1), (2, 1), (3, 1) });
-        Utils.FindCharactersCoordinates(asciiRectangle, "AB").Should().BeEquivalentTo(new[] { (0,0), (1, 1), (2, 1), (3, 1) });
+        Utils.FindCharactersCoordinates(asciiRectangle, "A").Should().BeEquivalentTo(new Position[] { (0, 0) });
+        Utils.FindCharactersCoordinates(asciiRectangle, "B").Should().BeEquivalentTo(new Position[] { (1, 1), (2, 1), (3, 1) });
+        Utils.FindCharactersCoordinates(asciiRectangle, "AB").Should().BeEquivalentTo(new Position[] { (0,0), (1, 1), (2, 1), (3, 1) });
         Utils.FindCharactersCoordinates(asciiRectangle, "X").Should().BeEquivalentTo(Array.Empty<(int,int)>());
     }
 
@@ -178,15 +178,15 @@ public class Tests
         ");
 
         sut.WherePlayerIs.Should().Be((2, 0));
-        sut.Walls.Should().BeEquivalentTo(new[] {(1,0)});
-        sut.Boxes.Should().BeEquivalentTo(new[] {(0,1), (2,1)});
-        sut.Targets.Should().BeEquivalentTo(new[] {(1,1), (2,1)});
+        sut.Walls.Should().BeEquivalentTo(new Position[] {(1,0)});
+        sut.Boxes.Should().BeEquivalentTo(new Position[] {(0,1), (2,1)});
+        sut.Targets.Should().BeEquivalentTo(new Position[] {(1,1), (2,1)});
     }
 
     [Test]
     public void LevelSize()
     {
-        new Sokoban((0,0), targets: new[]{(10, 0)}, boxes: new[]{(0, 10)})
+        new Sokoban((0,0), targets: new Position[]{(10, 0)}, boxes: new Position[]{(0, 10)})
             .LevelSize.Should().Be((11, 11));
     }
 }

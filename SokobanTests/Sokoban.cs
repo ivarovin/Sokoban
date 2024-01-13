@@ -2,23 +2,12 @@ using FluentAssertions;
 
 namespace SokobanTests;
 
-public struct Position {
-    public readonly int x, y;    
-
-    public Position(int x, int y)  {
-        this.x = x;
-        this.y = y;
-    }
-
-    public static implicit operator (int, int) (Position position) => (position.x, position.y);
-}
-
 public class Sokoban
 {
-    public readonly (int, int)[] Targets;
-    public readonly (int, int)[] Boxes;
+    public readonly Position[] Targets;
+    public readonly Position[] Boxes;
     private readonly Sokoban previous;
-    public readonly (int, int)[] Walls;
+    public readonly Position[] Walls;
 
     public bool IsSolved => Targets.All(t => Boxes.Contains(t));
     public (int x, int y) WherePlayerIs { get; }
@@ -28,21 +17,23 @@ public class Sokoban
         get
         {
             var allPoints = Targets.Concat(Boxes).Concat(Walls).Append(WherePlayerIs);
-            return (1 + allPoints.Max(p => p.Item1), 1 + allPoints.Max(p => p.Item2));
+            return (1 + allPoints.Max(p => p.x), 1 + allPoints.Max(p => p.y));
         }
     }
 
-    public Sokoban((int, int) wherePlayerIs, (int, int)[] targets, (int, int)[] boxes, (int, int)[] walls, Sokoban previous)
+    public Sokoban(Position wherePlayerIs, Position[] targets, Position[] boxes, Position[] walls,
+        Sokoban previous)
         : this(wherePlayerIs, targets, boxes, walls)
     {
         this.previous = previous;
     }
 
-    public Sokoban((int, int) wherePlayerIs, (int, int)[] targets = null, (int, int)[] boxes = null, (int, int)[] walls = null)
+    public Sokoban(Position wherePlayerIs, Position[] targets = null, Position[] boxes = null,
+        Position[] walls = null)
     {
-        targets ??= Array.Empty<(int, int)>();
-        boxes ??= Array.Empty<(int, int)>();
-        walls ??= Array.Empty<(int, int)>();
+        targets ??= Array.Empty<Position>();
+        boxes ??= Array.Empty<Position>();
+        walls ??= Array.Empty<Position>();
 
         if (walls.Contains(wherePlayerIs))
             throw new ArgumentException("Player cannot be in a wall");
@@ -67,7 +58,8 @@ public class Sokoban
             ? PushBoxTowards(direction)
             : IsWallAt((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y))
                 ? this
-                : new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), Targets, Boxes, Walls, this);
+                : new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), Targets, Boxes, Walls,
+                    this);
     }
 
     bool IsWallAt((int x, int y) position) => Walls.Contains(position);
@@ -84,7 +76,8 @@ public class Sokoban
         var boxIndex = Array.IndexOf(Boxes, (WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y));
         var newBoxes = Boxes.ToArray();
         newBoxes[boxIndex] = (WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2);
-        return new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), Targets, newBoxes, Walls, this);
+        return new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), Targets, newBoxes, Walls,
+            this);
     }
 
     public Sokoban Undo() => previous;
@@ -92,7 +85,7 @@ public class Sokoban
     public static Sokoban FromAscii(string ascii)
     {
         return new Sokoban(
-            wherePlayerIs: Utils.SingleValue<(int, int)>(Utils.FindCharactersCoordinates(ascii, "Pp")),
+            wherePlayerIs: Utils.SingleValue<Position>(Utils.FindCharactersCoordinates(ascii, "Pp")),
             targets: Utils.FindCharactersCoordinates(ascii, "O@"),
             boxes: Utils.FindCharactersCoordinates(ascii, "*@"),
             walls: Utils.FindCharactersCoordinates(ascii, "#")
@@ -102,9 +95,9 @@ public class Sokoban
 
 public class Utils
 {
-    public static (int, int)[] FindCharactersCoordinates(string asciiRectangle, string searchChars)
+    public static Position[] FindCharactersCoordinates(string asciiRectangle, string searchChars)
     {
-        List<(int, int)> coordinates = new List<(int, int)>();
+        List<Position> coordinates = new List<Position>();
 
         string[] lines = asciiRectangle.Trim().Split('\n');
 
@@ -141,6 +134,7 @@ public class Utils
         {
             throw new ArgumentException("Array does not have exactly 1 element.");
         }
+
         return arr[0];
     }
 }
