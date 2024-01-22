@@ -70,10 +70,13 @@ public class Sokoban
         return IsBoxAt((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y))
             ? PushBoxTowards(direction)
             : IsWallAt((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y))
-                ? new Sokoban(WherePlayerIs, Targets, Boxes, Walls, this, direction)
+                ? FaceObstacleTowards(direction)
                 : new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), Targets, Boxes, Walls,
                     this, direction);
     }
+
+    Sokoban FaceObstacleTowards((int x, int y) direction) 
+        => new(WherePlayerIs, Targets, Boxes, Walls, this, direction);
 
     bool IsWallAt(Position position) => Walls.Contains(position);
 
@@ -83,7 +86,7 @@ public class Sokoban
     {
         if (IsWallAt((WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2)) ||
             IsBoxAt((WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2)))
-            return new Sokoban(WherePlayerIs, Targets, Boxes, Walls, this, direction);
+            return FaceObstacleTowards(direction);
 
         var boxIndex = Array.IndexOf(Boxes, (WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y));
         var newBoxes = Boxes.ToArray();
