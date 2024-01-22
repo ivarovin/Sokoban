@@ -15,7 +15,7 @@ public static class SokobanBuilder
     {
         return new Sokoban(
             wherePlayerIs, targets ?? Array.Empty<Position>(), boxes ?? Array.Empty<Position>(), walls ?? Array.Empty<Position>(),
-            null, (0,0));   
+            null, new NewGame());   
     }
 }
 

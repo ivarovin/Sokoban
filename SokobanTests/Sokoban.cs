@@ -10,10 +10,10 @@ public class Sokoban
     public readonly Position[] Boxes;
     private readonly Sokoban previous;
     public readonly Position[] Walls;
+    public readonly DeltaState Delta;
 
     public bool IsSolved => Targets.All(t => Boxes.Contains(t));
     public Position WherePlayerIs { get; }
-    public Direction LastPlayerDirection { get; }
 
     public (int x, int y) LevelSize
     {
@@ -24,20 +24,8 @@ public class Sokoban
         }
     }
 
-    public DeltaState Delta
-    {
-        get
-        {
-            if (previous == null) return new NewGame();
-
-            if (previous.WherePlayerIs.Equals(WherePlayerIs)) return WallBump.Crash(WherePlayerIs, LastPlayerDirection);
-
-            return PlayerLinearMovement.Between(previous.WherePlayerIs, WherePlayerIs);
-        }
-    }
-
     public Sokoban(Position wherePlayerIs, Position[] targets , Position[] boxes ,
-        Position[] walls, Sokoban previous, Direction lastPlayerDirection)
+        Position[] walls, Sokoban previous, DeltaState delta)
     {
         if (walls.Contains(wherePlayerIs))
             throw new ArgumentException("Player cannot be in a wall");
@@ -55,7 +43,7 @@ public class Sokoban
         this.Targets = targets;
         this.Boxes = boxes;
         this.previous = previous;
-        this.LastPlayerDirection = lastPlayerDirection;
+        this.Delta = delta;
     }
 
     public Sokoban MoveTowards(Direction direction)
@@ -65,11 +53,11 @@ public class Sokoban
             : IsWallAt(WherePlayerIs.Add(direction))
                 ? FaceObstacleTowards(direction)
                 : new Sokoban(WherePlayerIs.Add(direction), Targets, Boxes, Walls,
-                    this, direction);
+                    this, PlayerLinearMovement.Between(WherePlayerIs, WherePlayerIs.Add(direction)));
     }
 
     Sokoban FaceObstacleTowards(Direction direction) 
-        => new(WherePlayerIs, Targets, Boxes, Walls, this, direction);
+        => new(WherePlayerIs, Targets, Boxes, Walls, this, WallBump.Crash(WherePlayerIs, direction));
 
     bool IsWallAt(Position position) => Walls.Contains(position);
 
@@ -84,8 +72,8 @@ public class Sokoban
         var boxIndex = Array.IndexOf(Boxes, WherePlayerIs.Add(direction));
         var newBoxes = Boxes.ToArray();
         newBoxes[boxIndex] = WherePlayerIs.Add(direction).Add(direction); 
-        return new Sokoban((WherePlayerIs.x + direction.dx, WherePlayerIs.y + direction.dy), Targets, newBoxes, Walls,
-            this, direction);
+        return new Sokoban(WherePlayerIs.Add(direction), Targets, newBoxes, Walls,
+            this, PlayerLinearMovement.Between(WherePlayerIs, WherePlayerIs.Add(direction)));
     }
 
     public Sokoban Undo() => this.previous == null ? this : previous;
@@ -98,7 +86,7 @@ public class Sokoban
             targets: Utils.FindCharactersCoordinates(ascii, "O@"),
             boxes: Utils.FindCharactersCoordinates(ascii, "*@"),
             walls: Utils.FindCharactersCoordinates(ascii, "#"),
-            null, (0,0)
+            null, new NewGame()
         );
     }
 }
