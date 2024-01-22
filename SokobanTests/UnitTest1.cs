@@ -176,13 +176,12 @@ public class Tests
     }
 
     [Test]
-    public void asdfasdf()
+    public void Register_IllegalMovement_Attempt()
     {
-        new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (1, 0) })
+        new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
-            .PlayerMovement.Should().Be(Movement.Between((0,0), (0,0)));
-            // ;/ .WherePlayerIs.Should().Be((Position)(0, 0))
-            
+            .MoveTowards((1,0))
+            .PlayerMovement.Should().Be(Movement.Between((1,0), (1,0)));
     }
 
     [Test]
