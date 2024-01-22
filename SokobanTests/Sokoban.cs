@@ -24,12 +24,12 @@ public class Sokoban
         }
     }
 
-    // sacar a la vista
-    public Movement PlayerMove
+    public DeltaState Delta
     {
         get
         {
-            if (previous == null) return PlayerLinearMovement.Between(WherePlayerIs, WherePlayerIs);
+            if (previous == null) return new NewGame();
+
             if (previous.WherePlayerIs.Equals(WherePlayerIs)) return WallBump.Crash(WherePlayerIs, LastPlayerDirection);
 
             return PlayerLinearMovement.Between(previous.WherePlayerIs, WherePlayerIs);

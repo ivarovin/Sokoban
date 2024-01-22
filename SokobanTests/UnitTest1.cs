@@ -92,7 +92,7 @@ public class Tests
     {
         SokobanBuilder.fsafsafa((4, 4))
             .MoveTowards((1, 0))
-            .PlayerMove.Should().Be(PlayerLinearMovement.Between((4,4), (5,4)));
+            .Delta.Should().Be(PlayerLinearMovement.Between((4,4), (5,4)));
     }
 
     [Test]
@@ -105,8 +105,8 @@ public class Tests
     public void Movement_IsNone_AtStart()
     {
         SokobanBuilder.fsafsafa((5, 5))
-            .PlayerMove
-            .Should().Be(PlayerLinearMovement.Between((5, 5), (5, 5)));
+            .Delta
+            .Should().Be(new NewGame());
     }
 
     [Test]
@@ -192,7 +192,7 @@ public class Tests
         SokobanBuilder.fsafsafa(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
             .MoveTowards((1,0))
-            .PlayerMove.Should().Be(WallBump.Crash((1,0), (1,0)));
+            .Delta.Should().Be(WallBump.Crash((1,0), (1,0)));
     }
 
     [Test]
@@ -201,7 +201,7 @@ public class Tests
         SokobanBuilder.fsafsafa(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (3, 0) })
             .MoveTowards((1, 0))
             .MoveTowards((1,0))
-            .PlayerMove.Should().Be(WallBump.Crash((1,0), (1,0)));
+            .Delta.Should().Be(WallBump.Crash((1,0), (1,0)));
     }
 
     [Test]

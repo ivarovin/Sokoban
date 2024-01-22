@@ -1,6 +1,6 @@
 namespace SokobanTests;
 
-public readonly struct WallBump : Movement
+public readonly struct WallBump : DeltaState
 {
     public readonly Position from;
     public readonly (int,int) MovingTowards;

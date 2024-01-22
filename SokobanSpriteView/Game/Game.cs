@@ -92,7 +92,7 @@ class Game
         turn_progress += (Engine.TimeDelta / turn_duration) * MathF.Pow(2f, pendingInputs.Count);
         turn_progress = Utils.Clamp01(turn_progress);
 
-        DrawTile(textures.player, Vector2.Lerp(cur_state.PlayerMove.from.ToVector2(), cur_state.PlayerMove.to.ToVector2(), turn_progress));
+        DrawTile(textures.player, Vector2.Lerp(cur_state.Delta.from.ToVector2(), cur_state.Delta.to.ToVector2(), turn_progress));
 
         foreach (var (keys, action) in keymap)
         {

@@ -1,6 +1,6 @@
 namespace SokobanTests;
 
-public readonly struct PlayerLinearMovement : Movement
+public readonly struct PlayerLinearMovement : DeltaState
 {
     public readonly Position from;
     public readonly Position to;
