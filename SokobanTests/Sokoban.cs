@@ -45,13 +45,9 @@ public class Sokoban
         this.previous = previous;
     }
 
-    public Sokoban(Position wherePlayerIs, Position[] targets = null, Position[] boxes = null,
-        Position[] walls = null)
+    public Sokoban(Position wherePlayerIs, Position[] targets , Position[] boxes ,
+        Position[] walls)
     {
-        targets ??= Array.Empty<Position>();
-        boxes ??= Array.Empty<Position>();
-        walls ??= Array.Empty<Position>();
-
         if (walls.Contains(wherePlayerIs))
             throw new ArgumentException("Player cannot be in a wall");
         if (boxes.Contains(wherePlayerIs))
