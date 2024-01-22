@@ -8,6 +8,15 @@ namespace SokobanTests;
 // 4. El personaje no puede empujar una caja si hay una pared o una caja bloqueando el camino
 // 5. Todas las cajas deben estar sobre un objetivo para ganar el juego
 
+public static class SokobanBuilder
+{
+    public static Sokoban fsafsafa(Position wherePlayerIs, Position[] targets = null, Position[] boxes = null,
+        Position[] walls = null)
+    {
+        return new Sokoban(wherePlayerIs, targets ?? Array.Empty<Position>(), boxes ?? Array.Empty<Position>(), walls ?? Array.Empty<Position>());   
+    }
+}
+
 public class Tests
 {
     [Test]
@@ -63,7 +72,7 @@ public class Tests
     [Test]
     public void Spawn_Player()
     {
-        var sut = new Sokoban((1, 1));
+        var sut = SokobanBuilder.fsafsafa((1, 1));
 
         sut.WherePlayerIs.Should().Be((Position)(1, 1));
     }
@@ -71,7 +80,7 @@ public class Tests
     [Test]
     public void Move_Player()
     {
-        new Sokoban((0, 0))
+        SokobanBuilder.fsafsafa((0, 0))
             .MoveTowards((1, 0))
             .WherePlayerIs.Should().Be((Position)(1, 0));
     }
@@ -79,7 +88,7 @@ public class Tests
     [Test]
     public void Retrieve_PreviousPlayerMovement()
     {
-        new Sokoban((4, 4))
+        SokobanBuilder.fsafsafa((4, 4))
             .MoveTowards((1, 0))
             .PlayerMove.Should().Be(PlayerLinearMovement.Between((4,4), (5,4)));
     }
@@ -93,7 +102,7 @@ public class Tests
     [Test]
     public void Movement_IsNone_AtStart()
     {
-        new Sokoban((5, 5))
+        SokobanBuilder.fsafsafa((5, 5))
             .PlayerMove
             .Should().Be(PlayerLinearMovement.Between((5, 5), (5, 5)));
     }
@@ -101,14 +110,14 @@ public class Tests
     [Test]
     public void LoseGame()
     {
-        new Sokoban((10, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (1, 0) }).IsSolved.Should().BeFalse();
-        new Sokoban((10, 0), targets: new Position[] { (0, 0), (1, 0) }, boxes: new Position[] { (0, 0), (2, 0) }).IsSolved.Should().BeFalse();
+        SokobanBuilder.fsafsafa((10, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (1, 0) }).IsSolved.Should().BeFalse();
+        SokobanBuilder.fsafsafa((10, 0), targets: new Position[] { (0, 0), (1, 0) }, boxes: new Position[] { (0, 0), (2, 0) }).IsSolved.Should().BeFalse();
     }
 
     [Test]
     public void SolveGame()
     {
-        var sut = new Sokoban((10, 0), new Position[] { (0, 0) }, new Position[] { (0, 0) });
+        var sut = SokobanBuilder.fsafsafa((10, 0), new Position[] { (0, 0) }, new Position[] { (0, 0) });
 
         sut.IsSolved.Should().BeTrue();
     }
@@ -116,7 +125,7 @@ public class Tests
     [Test]
     public void Push_Box()
     {
-        var sut = new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (1, 0) })
+        var sut = SokobanBuilder.fsafsafa((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (1, 0) })
             .MoveTowards((1, 0));
 
         sut.WherePlayerIs.Should().Be((Position)(1, 0));
@@ -126,7 +135,7 @@ public class Tests
     [Test]
     public void PushBox_IsNotPossible_IfThereIsAnotherBehind()
     {
-        new Sokoban((0, 0), targets: new Position[] { (0, 0), (1, 0) }, boxes: new Position[] { (1, 0), (2, 0) })
+        SokobanBuilder.fsafsafa((0, 0), targets: new Position[] { (0, 0), (1, 0) }, boxes: new Position[] { (1, 0), (2, 0) })
             .MoveTowards((1, 0))
             .WherePlayerIs.Should().Be((Position)(0, 0));
     }
@@ -134,7 +143,7 @@ public class Tests
     [Test]
     public void Undo()
     {
-        new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
+        SokobanBuilder.fsafsafa((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
             .Undo()
             .WherePlayerIs.Should().Be((Position)(0, 0));
@@ -143,7 +152,7 @@ public class Tests
     [Test]
     public void UndoFirst()
     {
-        new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
+        SokobanBuilder.fsafsafa((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
             .Undo()
             .WherePlayerIs.Should().Be((Position)(0, 0));
     }
@@ -151,7 +160,7 @@ public class Tests
     [Test]
     public void Restart()
     {
-        new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
+        SokobanBuilder.fsafsafa((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
             .MoveTowards((1, 0))
             .MoveTowards((1, 0))
@@ -162,7 +171,7 @@ public class Tests
     [Test]
     public void RestartFirst()
     {
-        new Sokoban((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
+        SokobanBuilder.fsafsafa((0, 0), targets: new Position[] { (0, 0) }, boxes: new Position[] { (2, 0) })
             .Restart()
             .WherePlayerIs.Should().Be((Position)(0, 0));
     }
@@ -170,7 +179,7 @@ public class Tests
     [Test]
     public void CantWalkIntoWall()
     {
-        new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (1, 0) })
+        SokobanBuilder.fsafsafa(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (1, 0) })
             .MoveTowards((1, 0))
             .WherePlayerIs.Should().Be((Position)(0, 0));
     }
@@ -178,7 +187,7 @@ public class Tests
     [Test]
     public void Register_IllegalMovement_Attempt()
     {
-        new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (2, 0) })
+        SokobanBuilder.fsafsafa(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
             .MoveTowards((1,0))
             .PlayerMove.Should().Be(WallBump.Crash((1,0), (1,0)));
@@ -187,7 +196,7 @@ public class Tests
     [Test]
     public void Register_IllegalMovement_Attempt_AgainstBox()
     {
-        new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (3, 0) })
+        SokobanBuilder.fsafsafa(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (3, 0) })
             .MoveTowards((1, 0))
             .MoveTowards((1,0))
             .PlayerMove.Should().Be(WallBump.Crash((1,0), (1,0)));
@@ -196,7 +205,7 @@ public class Tests
     [Test]
     public void CantPushIntoWall()
     {
-        new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (2, 0) })
+        SokobanBuilder.fsafsafa(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
             .WherePlayerIs.Should().Be((Position)(0, 0));
     }
@@ -245,7 +254,7 @@ public class Tests
     [Test]
     public void LevelSize()
     {
-        new Sokoban((0,0), targets: new Position[]{(10, 0)}, boxes: new Position[]{(0, 10)})
+        SokobanBuilder.fsafsafa((0,0), targets: new Position[]{(10, 0)}, boxes: new Position[]{(0, 10)})
             .LevelSize.Should().Be((Position)(11, 11));
     }
 }
