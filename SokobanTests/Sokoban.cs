@@ -59,7 +59,7 @@ public class Sokoban
         return IsBoxAt((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y))
             ? PushBoxTowards(direction)
             : IsWallAt((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y))
-                ? this
+                ? new Sokoban(WherePlayerIs, Targets, Boxes, Walls, this)
                 : new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), Targets, Boxes, Walls,
                     this);
     }
