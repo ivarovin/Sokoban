@@ -1,5 +1,9 @@
 namespace SokobanTests;
 
+// In this git branch, the model knows about the transitions between states;
+// in other words, it not only knows .previous, but the difference between .previous & .this,
+// even if that difference feels very view-specific (such as the concept of bumping into a wall)
+
 public class Sokoban
 {
     public readonly Position[] Targets;
