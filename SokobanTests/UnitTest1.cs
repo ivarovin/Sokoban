@@ -10,10 +10,12 @@ namespace SokobanTests;
 
 public static class SokobanBuilder
 {
-    public static Sokoban fsafsafa(Position wherePlayerIs, Position[] targets = null, Position[] boxes = null,
-        Position[] walls = null)
+    public static Sokoban fsafsafa(Position wherePlayerIs, Position[]? targets = null, Position[]? boxes = null,
+        Position[]? walls = null)
     {
-        return new Sokoban(wherePlayerIs, targets ?? Array.Empty<Position>(), boxes ?? Array.Empty<Position>(), walls ?? Array.Empty<Position>());   
+        return new Sokoban(
+            wherePlayerIs, targets ?? Array.Empty<Position>(), boxes ?? Array.Empty<Position>(), walls ?? Array.Empty<Position>(),
+            null, (0,0));   
     }
 }
 

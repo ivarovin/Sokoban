@@ -1,6 +1,5 @@
 namespace SokobanTests;
 
-// limpiar constructores
 // hacer vector direccion
 public class Sokoban
 {
@@ -34,22 +33,8 @@ public class Sokoban
         }
     }
 
-    public Sokoban(Position wherePlayerIs, Position[] targets, Position[] boxes, Position[] walls,
-        Sokoban previous, (int, int) lastPlayerDirection)
-        : this(wherePlayerIs, targets, boxes, walls, previous)
-    {
-        this.LastPlayerDirection = lastPlayerDirection;
-    }
-
-    public Sokoban(Position wherePlayerIs, Position[] targets, Position[] boxes, Position[] walls,
-        Sokoban previous)
-        : this(wherePlayerIs, targets, boxes, walls)
-    {
-        this.previous = previous;
-    }
-
     public Sokoban(Position wherePlayerIs, Position[] targets , Position[] boxes ,
-        Position[] walls)
+        Position[] walls, Sokoban previous, (int, int) lastPlayerDirection)
     {
         if (walls.Contains(wherePlayerIs))
             throw new ArgumentException("Player cannot be in a wall");
@@ -66,6 +51,8 @@ public class Sokoban
         this.Walls = walls;
         this.Targets = targets;
         this.Boxes = boxes;
+        this.previous = previous;
+        this.LastPlayerDirection = lastPlayerDirection;
     }
 
     public Sokoban MoveTowards((int x, int y) direction)
@@ -107,7 +94,8 @@ public class Sokoban
             wherePlayerIs: Utils.SingleValue<Position>(Utils.FindCharactersCoordinates(ascii, "Pp")),
             targets: Utils.FindCharactersCoordinates(ascii, "O@"),
             boxes: Utils.FindCharactersCoordinates(ascii, "*@"),
-            walls: Utils.FindCharactersCoordinates(ascii, "#")
+            walls: Utils.FindCharactersCoordinates(ascii, "#"),
+            null, (0,0)
         );
     }
 }
