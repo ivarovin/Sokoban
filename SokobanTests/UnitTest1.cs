@@ -81,7 +81,7 @@ public class Tests
     {
         new Sokoban((4, 4))
             .MoveTowards((1, 0))
-            .PlayerMovement.Should().Be(Movement.Between((4,4), (5,4)));
+            .PlayerPlayerLinearMovement.Should().Be(PlayerLinearMovement.Between((4,4), (5,4)));
     }
 
     [Test]
@@ -94,8 +94,8 @@ public class Tests
     public void Movement_IsNone_AtStart()
     {
         new Sokoban((5, 5))
-            .PlayerMovement
-            .Should().Be(Movement.Between((5, 5), (5, 5)));
+            .PlayerPlayerLinearMovement
+            .Should().Be(PlayerLinearMovement.Between((5, 5), (5, 5)));
     }
 
     [Test]
@@ -181,7 +181,7 @@ public class Tests
         new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
             .MoveTowards((1,0))
-            .PlayerMovement.Should().Be(Movement.Between((1,0), (1,0)));
+            .PlayerPlayerLinearMovement.Should().Be(PlayerLinearMovement.Between((1,0), (1,0)));
     }
 
     [Test]
@@ -190,7 +190,7 @@ public class Tests
         new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (3, 0) })
             .MoveTowards((1, 0))
             .MoveTowards((1,0))
-            .PlayerMovement.Should().Be(Movement.Between((1,0), (1,0)));
+            .PlayerPlayerLinearMovement.Should().Be(PlayerLinearMovement.Between((1,0), (1,0)));
     }
 
     [Test]
