@@ -85,9 +85,8 @@ public class Sokoban
 
     Sokoban PushBoxTowards((int x, int y) direction)
     {
-        if (IsWallAt((WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2)))
-            return this;
-        if (IsBoxAt((WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2)))
+        if (IsWallAt((WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2)) ||
+            IsBoxAt((WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2)))
             return this;
 
         var boxIndex = Array.IndexOf(Boxes, (WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y));
