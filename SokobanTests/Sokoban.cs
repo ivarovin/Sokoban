@@ -1,6 +1,5 @@
 namespace SokobanTests;
 
-// hacer vector direccion
 public class Sokoban
 {
     public readonly Position[] Targets;
