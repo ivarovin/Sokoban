@@ -53,7 +53,7 @@ public class Tests
             ####..
         ");
 
-        var solution = new Position[] {
+        var solution = new Direction[] {
             down, left, up, 
             right, right, right, down, left, 
             up, left, left, down, down, right, up,
