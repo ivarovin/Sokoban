@@ -181,7 +181,7 @@ public class Tests
         new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (2, 0) })
             .MoveTowards((1, 0))
             .MoveTowards((1,0))
-            .PlayerMove.Should().Be(WallBump.Crash((Position)(1,0), (1,0)));
+            .PlayerMove.Should().Be(WallBump.Crash((1,0), (1,0)));
     }
 
     // [Test]

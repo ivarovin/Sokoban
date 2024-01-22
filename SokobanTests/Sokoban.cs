@@ -20,16 +20,19 @@ public class Sokoban
         }
     }
 
-    public Movement PlayerMove => {
-        get {
+    public Movement PlayerMove
+    {
+        get
+        {
             if (previous == null) return PlayerLinearMovement.Between(WherePlayerIs, WherePlayerIs);
-            // PlayerLinearMovement.Between(previous == null ? WherePlayerIs : previous.WherePlayerIs, WherePlayerIs);
-        }
+            if (previous.WherePlayerIs.Equals(WherePlayerIs)) return WallBump.Crash(WherePlayerIs, LastPlayerDirection);
 
+            return PlayerLinearMovement.Between(previous.WherePlayerIs, WherePlayerIs);
+        }
     }
 
     public Sokoban(Position wherePlayerIs, Position[] targets, Position[] boxes, Position[] walls,
-        Sokoban previous, (int,int) lastPlayerDirection)
+        Sokoban previous, (int, int) lastPlayerDirection)
         : this(wherePlayerIs, targets, boxes, walls, previous)
     {
         this.LastPlayerDirection = lastPlayerDirection;
@@ -71,9 +74,9 @@ public class Sokoban
         return IsBoxAt((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y))
             ? PushBoxTowards(direction)
             : IsWallAt((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y))
-                ? new Sokoban(WherePlayerIs, Targets, Boxes, Walls, this)
+                ? new Sokoban(WherePlayerIs, Targets, Boxes, Walls, this, direction)
                 : new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), Targets, Boxes, Walls,
-                    this);
+                    this, direction);
     }
 
     bool IsWallAt(Position position) => Walls.Contains(position);
@@ -91,7 +94,7 @@ public class Sokoban
         var newBoxes = Boxes.ToArray();
         newBoxes[boxIndex] = (WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2);
         return new Sokoban((WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y), Targets, newBoxes, Walls,
-            this);
+            this, direction);
     }
 
     public Sokoban Undo() => this.previous == null ? this : previous;
