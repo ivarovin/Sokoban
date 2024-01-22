@@ -1,5 +1,7 @@
 namespace SokobanTests;
 
+// limpiar constructores
+// hacer vector direccion
 public class Sokoban
 {
     public readonly Position[] Targets;
@@ -20,6 +22,7 @@ public class Sokoban
         }
     }
 
+    // sacar a la vista
     public Movement PlayerMove
     {
         get
