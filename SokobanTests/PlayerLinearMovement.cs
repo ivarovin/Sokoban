@@ -13,4 +13,3 @@ public readonly struct PlayerLinearMovement : Movement
     
     public static PlayerLinearMovement Between(Position from, Position to) => new PlayerLinearMovement(from, to);
 }
-
