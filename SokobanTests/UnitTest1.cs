@@ -176,6 +176,16 @@ public class Tests
     }
 
     [Test]
+    public void asdfasdf()
+    {
+        new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (1, 0) })
+            .MoveTowards((1, 0))
+            .PlayerMovement.Should().Be(Movement.Between((0,0), (0,0)));
+            // ;/ .WherePlayerIs.Should().Be((Position)(0, 0))
+            
+    }
+
+    [Test]
     public void CantPushIntoWall()
     {
         new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (2, 0) })
