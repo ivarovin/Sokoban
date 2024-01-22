@@ -20,8 +20,20 @@ public class Sokoban
         }
     }
 
-    public Movement PlayerMove =>
-        PlayerLinearMovement.Between(previous == null ? WherePlayerIs : previous.WherePlayerIs, WherePlayerIs);
+    public Movement PlayerMove => {
+        get {
+            if (previous == null) return PlayerLinearMovement.Between(WherePlayerIs, WherePlayerIs);
+            // PlayerLinearMovement.Between(previous == null ? WherePlayerIs : previous.WherePlayerIs, WherePlayerIs);
+        }
+
+    }
+
+    public Sokoban(Position wherePlayerIs, Position[] targets, Position[] boxes, Position[] walls,
+        Sokoban previous, (int,int) lastPlayerDirection)
+        : this(wherePlayerIs, targets, boxes, walls, previous)
+    {
+        this.LastPlayerDirection = lastPlayerDirection;
+    }
 
     public Sokoban(Position wherePlayerIs, Position[] targets, Position[] boxes, Position[] walls,
         Sokoban previous)
