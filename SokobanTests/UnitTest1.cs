@@ -184,14 +184,14 @@ public class Tests
             .PlayerMove.Should().Be(WallBump.Crash((1,0), (1,0)));
     }
 
-    // [Test]
-    // public void Register_IllegalMovement_Attempt_AgainstBox()
-    // {
-    //     new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (3, 0) })
-    //         .MoveTowards((1, 0))
-    //         .MoveTowards((1,0))
-    //         .PlayerMove.Should().Be(PlayerLinearMovement.Between((1,0), (1,0)));
-    // }
+    [Test]
+    public void Register_IllegalMovement_Attempt_AgainstBox()
+    {
+        new Sokoban(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (3, 0) })
+            .MoveTowards((1, 0))
+            .MoveTowards((1,0))
+            .PlayerMove.Should().Be(WallBump.Crash((1,0), (1,0)));
+    }
 
     [Test]
     public void CantPushIntoWall()

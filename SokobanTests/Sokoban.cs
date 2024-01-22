@@ -87,7 +87,7 @@ public class Sokoban
     {
         if (IsWallAt((WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2)) ||
             IsBoxAt((WherePlayerIs.x + direction.x * 2, WherePlayerIs.y + direction.y * 2)))
-            return this;
+            return new Sokoban(WherePlayerIs, Targets, Boxes, Walls, this, direction);
 
         var boxIndex = Array.IndexOf(Boxes, (WherePlayerIs.x + direction.x, WherePlayerIs.y + direction.y));
         var newBoxes = Boxes.ToArray();
