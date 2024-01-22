@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 namespace SokobanTests;
 
 public class Sokoban
@@ -11,6 +9,7 @@ public class Sokoban
 
     public bool IsSolved => Targets.All(t => Boxes.Contains(t));
     public Position WherePlayerIs { get; }
+    public (int, int) LastPlayerDirection { get; }
 
     public (int x, int y) LevelSize
     {
@@ -21,8 +20,8 @@ public class Sokoban
         }
     }
 
-    public Movement PlayerMove => PlayerLinearMovement.Between(previous == null ? WherePlayerIs : previous.WherePlayerIs, WherePlayerIs);
-    // public PlayerLinearMovement PlayerPlayerLinearMovement => PlayerLinearMovement.Between(previous == null ? WherePlayerIs : previous.WherePlayerIs, WherePlayerIs);
+    public Movement PlayerMove =>
+        PlayerLinearMovement.Between(previous == null ? WherePlayerIs : previous.WherePlayerIs, WherePlayerIs);
 
     public Sokoban(Position wherePlayerIs, Position[] targets, Position[] boxes, Position[] walls,
         Sokoban previous)
