@@ -3,7 +3,7 @@ namespace SokobanTests;
 public readonly struct WallBump : DeltaState
 {
     public readonly Position from;
-    public readonly (int,int) MovingTowards;
+    public readonly Direction MovingTowards;
 
     public WallBump(Position from, (int,int) movingTowards)
     {

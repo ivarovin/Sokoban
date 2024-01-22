@@ -5,6 +5,7 @@ using System.Collections.Generic;
 static class PositionConversions
 {
     public static Vector2 ToVector2(this Position p) => new Vector2(p.x, p.y);
+    public static Vector2 ToVector2(this Direction p) => new Vector2(p.dx, p.dy);
 }
 
 class Game
@@ -92,7 +93,21 @@ class Game
         turn_progress += (Engine.TimeDelta / turn_duration) * MathF.Pow(2f, pendingInputs.Count);
         turn_progress = Utils.Clamp01(turn_progress);
 
-        DrawTile(textures.player, Vector2.Lerp(cur_state.Delta.from.ToVector2(), cur_state.Delta.to.ToVector2(), turn_progress));
+        switch (cur_state.Delta)
+        {
+            case NewGame newGame:
+                DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2());
+                break;
+            case PlayerLinearMovement move:
+                DrawTile(textures.player, Vector2.Lerp(move.from.ToVector2(), move.to.ToVector2(), turn_progress));
+                break;
+            case WallBump bump:
+                DrawTile(textures.player, bump.from.ToVector2() + .3f * bump.MovingTowards.ToVector2() * (.5f - MathF.Abs(turn_progress - .5f)));
+                break;
+            
+            default:
+                throw new Exception("Unknown Delta type");
+        }
 
         foreach (var (keys, action) in keymap)
         {
