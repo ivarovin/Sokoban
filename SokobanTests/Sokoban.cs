@@ -57,11 +57,11 @@ public class Sokoban
 
     public Sokoban MoveTowards(Direction direction)
     {
-        return IsBoxAt((WherePlayerIs.x + direction.dx, WherePlayerIs.y + direction.dy))
+        return IsBoxAt(WherePlayerIs.Add(direction))
             ? PushBoxTowards(direction)
-            : IsWallAt((WherePlayerIs.x + direction.dx, WherePlayerIs.y + direction.dy))
+            : IsWallAt(WherePlayerIs.Add(direction))
                 ? FaceObstacleTowards(direction)
-                : new Sokoban((WherePlayerIs.x + direction.dx, WherePlayerIs.y + direction.dy), Targets, Boxes, Walls,
+                : new Sokoban(WherePlayerIs.Add(direction), Targets, Boxes, Walls,
                     this, direction);
     }
 
@@ -74,13 +74,13 @@ public class Sokoban
 
     Sokoban PushBoxTowards(Direction direction)
     {
-        if (IsWallAt((WherePlayerIs.x + direction.dx * 2, WherePlayerIs.y + direction.dy * 2)) ||
-            IsBoxAt((WherePlayerIs.x + direction.dx * 2, WherePlayerIs.y + direction.dy * 2)))
+        if (IsWallAt(WherePlayerIs.Add(direction).Add(direction)) ||
+            IsBoxAt(WherePlayerIs.Add(direction).Add(direction)))
             return FaceObstacleTowards(direction);
 
-        var boxIndex = Array.IndexOf(Boxes, (WherePlayerIs.x + direction.dx, WherePlayerIs.y + direction.dy));
+        var boxIndex = Array.IndexOf(Boxes, WherePlayerIs.Add(direction));
         var newBoxes = Boxes.ToArray();
-        newBoxes[boxIndex] = (WherePlayerIs.x + direction.dx * 2, WherePlayerIs.y + direction.dy * 2);
+        newBoxes[boxIndex] = WherePlayerIs.Add(direction).Add(direction); 
         return new Sokoban((WherePlayerIs.x + direction.dx, WherePlayerIs.y + direction.dy), Targets, newBoxes, Walls,
             this, direction);
     }

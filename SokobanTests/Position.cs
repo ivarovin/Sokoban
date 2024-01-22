@@ -1,3 +1,4 @@
+
 namespace SokobanTests;
 
 public struct Position
@@ -9,6 +10,8 @@ public struct Position
         this.x = x;
         this.y = y;
     }
+
+    public Position Add(Direction direction) => new Position(x + direction.dx, y + direction.dy);
 
     public static implicit operator (int, int)(Position position) => (position.x, position.y);
     public static implicit operator Position((int, int) position) => new(position.Item1, position.Item2);
