@@ -10,4 +10,6 @@ public readonly struct WallBump : Movement
         this.from = from;
         this.MovingTowards = movingTowards;
     }
+
+    public static WallBump Crash(Position from, (int, int) direction) => new WallBump(from, direction);
 }
