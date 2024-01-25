@@ -20,18 +20,6 @@ public class Sokoban
         }
     }
 
-    // sacar a la vista
-    public Movement PlayerMove
-    {
-        get
-        {
-            if (previous == null) return PlayerLinearMovement.Between(WherePlayerIs, WherePlayerIs);
-            if (previous.WherePlayerIs.Equals(WherePlayerIs)) return WallBump.Crash(WherePlayerIs, LastPlayerDirection);
-
-            return PlayerLinearMovement.Between(previous.WherePlayerIs, WherePlayerIs);
-        }
-    }
-
     public Sokoban(Position wherePlayerIs, Position[] targets , Position[] boxes ,
         Position[] walls, Sokoban previous, Direction lastPlayerDirection)
     {

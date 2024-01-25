@@ -15,7 +15,7 @@ public static class SokobanBuilder
     {
         return new Sokoban(
             wherePlayerIs, targets ?? Array.Empty<Position>(), boxes ?? Array.Empty<Position>(), walls ?? Array.Empty<Position>(),
-            null, (0,0));   
+            null, (0, 0));
     }
 }
 
@@ -29,7 +29,7 @@ public class Tests
             #P*O#
             #####
         ")
-            .MoveTowards((1,0))
+            .MoveTowards((1, 0))
             .IsSolved.Should().BeTrue();
 
     }
@@ -37,10 +37,10 @@ public class Tests
     [Test]
     public void SampleLevel()
     {
-        (int, int) right = (1,0);
-        (int, int) left = (-1,0);
-        (int, int) down = (0,1);
-        (int, int) up = (0,-1);
+        (int, int) right = (1, 0);
+        (int, int) left = (-1, 0);
+        (int, int) down = (0, 1);
+        (int, int) up = (0, -1);
 
         // Microban 1, by David Skinner
         var sut = Sokoban.FromAscii(@"
@@ -54,18 +54,18 @@ public class Tests
         ");
 
         var solution = new Direction[] {
-            down, left, up, 
-            right, right, right, down, left, 
+            down, left, up,
+            right, right, right, down, left,
             up, left, left, down, down, right, up,
             left, up, right,
             up, up, left, down,
             right, down, down, right, right, up, left,
-            down, left, up, up 
+            down, left, up, up
         };
 
         foreach (var move in solution)
         {
-            sut.IsSolved.Should().BeFalse();     
+            sut.IsSolved.Should().BeFalse();
             sut = sut.MoveTowards(move);
         }
         sut.IsSolved.Should().BeTrue();
@@ -88,25 +88,9 @@ public class Tests
     }
 
     [Test]
-    public void Retrieve_PreviousPlayerMovement()
-    {
-        SokobanBuilder.fsafsafa((4, 4))
-            .MoveTowards((1, 0))
-            .PlayerMove.Should().Be(PlayerLinearMovement.Between((4,4), (5,4)));
-    }
-
-    [Test]
     public void Retrieve_MovedBoxes_FromLastTick()
     {
         //Obtener todas las cajas que se movieron en el último tick
-    }
-
-    [Test]
-    public void Movement_IsNone_AtStart()
-    {
-        SokobanBuilder.fsafsafa((5, 5))
-            .PlayerMove
-            .Should().Be(PlayerLinearMovement.Between((5, 5), (5, 5)));
     }
 
     [Test]
@@ -189,19 +173,19 @@ public class Tests
     [Test]
     public void Register_IllegalMovement_Attempt()
     {
-        SokobanBuilder.fsafsafa(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (2, 0) })
+        SokobanBuilder.fsafsafa(wherePlayerIs: (0, 0), targets: new Position[] { (3, 1) }, boxes: new Position[] { (1, 3) }, walls: new Position[] { (1, 1) })
             .MoveTowards((1, 0))
-            .MoveTowards((1,0))
-            .PlayerMove.Should().Be(WallBump.Crash((1,0), (1,0)));
+            .MoveTowards((0, 1))
+            .LastPlayerDirection.Should().Be((Direction)(0, 1));
     }
 
     [Test]
     public void Register_IllegalMovement_Attempt_AgainstBox()
     {
-        SokobanBuilder.fsafsafa(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 0) }, walls: new Position[] { (3, 0) })
+        SokobanBuilder.fsafsafa(wherePlayerIs: (0, 0), targets: new Position[] { (1, 1) }, boxes: new Position[] { (1, 1) }, walls: new Position[] { (1, 2) })
             .MoveTowards((1, 0))
-            .MoveTowards((1,0))
-            .PlayerMove.Should().Be(WallBump.Crash((1,0), (1,0)));
+            .MoveTowards((0, 1))
+            .LastPlayerDirection.Should().Be((Direction)(0, 1));
     }
 
     [Test]
@@ -223,8 +207,8 @@ public class Tests
 
         Utils.FindCharactersCoordinates(asciiRectangle, "A").Should().BeEquivalentTo(new Position[] { (0, 0) });
         Utils.FindCharactersCoordinates(asciiRectangle, "B").Should().BeEquivalentTo(new Position[] { (1, 1), (2, 1), (3, 1) });
-        Utils.FindCharactersCoordinates(asciiRectangle, "AB").Should().BeEquivalentTo(new Position[] { (0,0), (1, 1), (2, 1), (3, 1) });
-        Utils.FindCharactersCoordinates(asciiRectangle, "X").Should().BeEquivalentTo(Array.Empty<(int,int)>());
+        Utils.FindCharactersCoordinates(asciiRectangle, "AB").Should().BeEquivalentTo(new Position[] { (0, 0), (1, 1), (2, 1), (3, 1) });
+        Utils.FindCharactersCoordinates(asciiRectangle, "X").Should().BeEquivalentTo(Array.Empty<(int, int)>());
     }
 
     [Test]
@@ -248,15 +232,15 @@ public class Tests
         ");
 
         sut.WherePlayerIs.Should().Be((Position)(2, 0));
-        sut.Walls.Should().BeEquivalentTo(new Position[] {(1,0)});
-        sut.Boxes.Should().BeEquivalentTo(new Position[] {(0,1), (2,1)});
-        sut.Targets.Should().BeEquivalentTo(new Position[] {(1,1), (2,1)});
+        sut.Walls.Should().BeEquivalentTo(new Position[] { (1, 0) });
+        sut.Boxes.Should().BeEquivalentTo(new Position[] { (0, 1), (2, 1) });
+        sut.Targets.Should().BeEquivalentTo(new Position[] { (1, 1), (2, 1) });
     }
 
     [Test]
     public void LevelSize()
     {
-        SokobanBuilder.fsafsafa((0,0), targets: new Position[]{(10, 0)}, boxes: new Position[]{(0, 10)})
+        SokobanBuilder.fsafsafa((0, 0), targets: new Position[] { (10, 0) }, boxes: new Position[] { (0, 10) })
             .LevelSize.Should().Be((Position)(11, 11));
     }
 }
