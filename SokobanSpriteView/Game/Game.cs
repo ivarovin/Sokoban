@@ -5,6 +5,7 @@ using System.Collections.Generic;
 static class PositionConversions
 {
     public static Vector2 ToVector2(this Position p) => new Vector2(p.x, p.y);
+    public static Vector2 ToVector2(this Direction d) => new Vector2(d.dx, d.dy);
 }
 
 class Game
@@ -92,7 +93,22 @@ class Game
         turn_progress += (Engine.TimeDelta / turn_duration) * MathF.Pow(2f, pendingInputs.Count);
         turn_progress = Utils.Clamp01(turn_progress);
 
-        DrawTile(textures.player, Vector2.Lerp(cur_state.PlayerMove.from.ToVector2(), cur_state.PlayerMove.to.ToVector2(), turn_progress));
+        if (cur_state.WherePlayerIs.Equals(cur_state.Undo().WherePlayerIs))
+        {
+            if (cur_state.LastPlayerDirection.Equals((Direction)(0,0))) {
+                // initial state
+                DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2());
+            } else {
+                // Wall bump
+                DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2()
+                    + .2f * cur_state.LastPlayerDirection.ToVector2() * (.5f - MathF.Abs(turn_progress - .5f)));
+            }
+        }
+        else
+        {
+            // linear move
+            DrawTile(textures.player, Vector2.Lerp(cur_state.Undo().WherePlayerIs.ToVector2(), cur_state.WherePlayerIs.ToVector2(), turn_progress));
+        }
 
         foreach (var (keys, action) in keymap)
         {
@@ -134,13 +150,13 @@ class Game
         switch (playerInput)
         {
             case PlayerInput.Left:
-                return new Vector2(-1,0);
+                return new Vector2(-1, 0);
             case PlayerInput.Right:
-                return new Vector2(1,0);
+                return new Vector2(1, 0);
             case PlayerInput.Up:
-                return new Vector2(0,-1);
+                return new Vector2(0, -1);
             case PlayerInput.Down:
-                return new Vector2(0,1);
+                return new Vector2(0, 1);
             case PlayerInput.Undo:
             case PlayerInput.Restart:
             default:
