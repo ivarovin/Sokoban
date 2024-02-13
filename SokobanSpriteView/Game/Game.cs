@@ -94,10 +94,12 @@ class Game
         {
             var playerInput = pendingInputs.Dequeue();
 
+            source_state = target_state;
             switch (playerInput)
             {
                 case PlayerInput.Undo:
                     target_state = target_state.Undo();
+                    turn_progress = 0f;
                     break;
                 case PlayerInput.Restart:
                     target_state = target_state.Restart();
@@ -123,7 +125,7 @@ class Game
 
     void RenderPlayer()
     {
-        if (target_state.WherePlayerIs.Equals(target_state.Undo().WherePlayerIs))
+        if (target_state.WherePlayerIs.Equals(source_state.WherePlayerIs))
         {
             if (target_state.LastPlayerDirection.Equals((Direction)(0, 0)))
             {
@@ -142,7 +144,7 @@ class Game
         {
             // linear move
             DrawTile(textures.player,
-                Vector2.Lerp(target_state.Undo().WherePlayerIs.ToVector2(), target_state.WherePlayerIs.ToVector2(),
+                Vector2.Lerp(source_state.WherePlayerIs.ToVector2(), target_state.WherePlayerIs.ToVector2(),
                     turn_progress));
             // boxes move
         }
@@ -183,10 +185,10 @@ class Game
     private Vector2 BoxPosition(int index)
         => BoxRemainsAtSamePosition(index)
             ? target_state.Boxes[index].ToVector2()
-            : Vector2.Lerp(target_state.Undo().Boxes[index].ToVector2(), target_state.Boxes[index].ToVector2(),
+            : Vector2.Lerp(source_state.Boxes[index].ToVector2(), target_state.Boxes[index].ToVector2(),
                 turn_progress);
 
-    bool BoxRemainsAtSamePosition(int index) => target_state.Boxes[index].Equals(target_state.Undo().Boxes[index]);
+    bool BoxRemainsAtSamePosition(int index) => target_state.Boxes[index].Equals(source_state.Boxes[index]);
 
     private Vector2 DirectionFromInput(PlayerInput playerInput)
     {
