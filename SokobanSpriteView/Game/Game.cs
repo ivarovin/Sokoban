@@ -94,7 +94,7 @@ class Game
 
         for (int i = 0; i < cur_state.Boxes.Length; i++)
         {
-            RenderBox(i)
+            RenderBox(i);
         }
 
         turn_progress += (Engine.TimeDelta / turn_duration) * MathF.Pow(2f, pendingInputs.Count);
@@ -155,11 +155,13 @@ class Game
         }
     }
 
-    private RenderBox(int index) {
-        if (cur_state.Boxes[index].Equals(cur_state.Undo().Boxes[index])) {
-            DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2());
+    private void RenderBox(int index) {
+        if (BoxRemainsAtSamePosition(index)) {
+            DrawTile(textures.crate, cur_state.Boxes[index].ToVector2());
         }
     }
+
+    bool BoxRemainsAtSamePosition(int index) => cur_state.Boxes[index].Equals(cur_state.Undo().Boxes[index]);
 
     private Vector2 DirectionFromInput(PlayerInput playerInput)
     {
