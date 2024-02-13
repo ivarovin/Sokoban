@@ -76,11 +76,7 @@ class Game
         Engine.DrawTexture(texture, position * tile_size + offset, size: new Vector2(tile_size, tile_size));
     }
 
-    public void Update()
-    {
-        UpdateTime();
-        RenderGame();
-
+    private void RegisterInput() {
         foreach (var (keys, action) in keymap)
         {
             foreach (Key key in keys)
@@ -89,6 +85,13 @@ class Game
                     pendingInputs.Enqueue(action);
                 }
         }
+    }
+
+    public void Update()
+    {
+        UpdateTime();
+        RenderGame();
+        RegisterInput();
 
         if (turn_progress == 1f && pendingInputs.Count > 0)
         {
