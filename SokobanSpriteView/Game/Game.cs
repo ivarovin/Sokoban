@@ -155,9 +155,13 @@ class Game
         }
     }
 
-    private void RenderBox(int index) {
-        if (BoxRemainsAtSamePosition(index)) {
+    private void RenderBox(int index) 
+    {
+        if (BoxRemainsAtSamePosition(index))
             DrawTile(textures.crate, cur_state.Boxes[index].ToVector2());
+        else 
+        {
+            DrawTile(textures.crate, Vector2.Lerp(cur_state.Undo().Boxes[index].ToVector2(), cur_state.Boxes[index].ToVector2(), turn_progress));
         }
     }
 
