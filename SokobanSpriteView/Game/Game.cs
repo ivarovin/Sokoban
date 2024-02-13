@@ -103,6 +103,7 @@ class Game
                     break;
                 case PlayerInput.Restart:
                     target_state = target_state.Restart();
+                    turn_progress = 0f;
                     break;
                 case PlayerInput.Left:
                 case PlayerInput.Right:
