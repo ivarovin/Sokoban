@@ -13,7 +13,7 @@ class Game
     public static readonly string Title = "Sokoban";
     public static readonly Vector2 Resolution = new Vector2(512, 512);
 
-    Sokoban cur_state = Sokoban.FromAscii(@"
+    Sokoban target_state = Sokoban.FromAscii(@"
         ####..
         #.O#..
         #..###
@@ -22,6 +22,7 @@ class Game
         #..###
         ####..
     ");
+    Sokoban source_state;
 
     float turn_duration = .2f;
     float tile_size = 64;
@@ -67,6 +68,7 @@ class Game
 
     public Game()
     {
+        source_state = target_state;
     }
 
     void DrawTile(Texture texture, Vector2 position)
@@ -95,17 +97,17 @@ class Game
             switch (playerInput)
             {
                 case PlayerInput.Undo:
-                    cur_state = cur_state.Undo();
+                    target_state = target_state.Undo();
                     break;
                 case PlayerInput.Restart:
-                    cur_state = cur_state.Restart();
+                    target_state = target_state.Restart();
                     break;
                 case PlayerInput.Left:
                 case PlayerInput.Right:
                 case PlayerInput.Up:
                 case PlayerInput.Down:
                     Vector2 moveDirection = this.DirectionFromInput(playerInput);
-                    cur_state = cur_state.MoveTowards(((int)moveDirection.X, (int)moveDirection.Y));
+                    target_state = target_state.MoveTowards(((int)moveDirection.X, (int)moveDirection.Y));
                     turn_progress = 0f;
                     break;
             }
@@ -121,18 +123,18 @@ class Game
 
     void RenderPlayer()
     {
-        if (cur_state.WherePlayerIs.Equals(cur_state.Undo().WherePlayerIs))
+        if (target_state.WherePlayerIs.Equals(target_state.Undo().WherePlayerIs))
         {
-            if (cur_state.LastPlayerDirection.Equals((Direction)(0, 0)))
+            if (target_state.LastPlayerDirection.Equals((Direction)(0, 0)))
             {
                 // initial state
-                DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2());
+                DrawTile(textures.player, target_state.WherePlayerIs.ToVector2());
             }
             else
             {
                 // Wall bump
-                DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2()
-                                          + .2f * cur_state.LastPlayerDirection.ToVector2() *
+                DrawTile(textures.player, target_state.WherePlayerIs.ToVector2()
+                                          + .2f * target_state.LastPlayerDirection.ToVector2() *
                                           (.5f - MathF.Abs(turn_progress - .5f)));
             }
         }
@@ -140,7 +142,7 @@ class Game
         {
             // linear move
             DrawTile(textures.player,
-                Vector2.Lerp(cur_state.Undo().WherePlayerIs.ToVector2(), cur_state.WherePlayerIs.ToVector2(),
+                Vector2.Lerp(target_state.Undo().WherePlayerIs.ToVector2(), target_state.WherePlayerIs.ToVector2(),
                     turn_progress));
             // boxes move
         }
@@ -154,7 +156,7 @@ class Game
 
     void RenderBoxes()
     {
-        for (int i = 0; i < cur_state.Boxes.Length; i++)
+        for (int i = 0; i < target_state.Boxes.Length; i++)
         {
             RenderBox(i);
         }
@@ -162,15 +164,15 @@ class Game
 
     void RenderLevelGeometry()
     {
-        for (int y = 0; y < cur_state.LevelSize.y; y++)
+        for (int y = 0; y < target_state.LevelSize.y; y++)
         {
-            for (int x = 0; x < cur_state.LevelSize.x; x++)
+            for (int x = 0; x < target_state.LevelSize.x; x++)
             {
                 var pos = new Vector2(x, y);
                 DrawTile(textures.floor, pos);
-                if (cur_state.Walls.Contains((Position)(x, y)))
+                if (target_state.Walls.Contains((Position)(x, y)))
                     DrawTile(textures.wall, pos);
-                if (cur_state.Targets.Contains((Position)(x, y)))
+                if (target_state.Targets.Contains((Position)(x, y)))
                     DrawTile(textures.target, pos);
             }
         }
@@ -180,11 +182,11 @@ class Game
 
     private Vector2 BoxPosition(int index)
         => BoxRemainsAtSamePosition(index)
-            ? cur_state.Boxes[index].ToVector2()
-            : Vector2.Lerp(cur_state.Undo().Boxes[index].ToVector2(), cur_state.Boxes[index].ToVector2(),
+            ? target_state.Boxes[index].ToVector2()
+            : Vector2.Lerp(target_state.Undo().Boxes[index].ToVector2(), target_state.Boxes[index].ToVector2(),
                 turn_progress);
 
-    bool BoxRemainsAtSamePosition(int index) => cur_state.Boxes[index].Equals(cur_state.Undo().Boxes[index]);
+    bool BoxRemainsAtSamePosition(int index) => target_state.Boxes[index].Equals(target_state.Undo().Boxes[index]);
 
     private Vector2 DirectionFromInput(PlayerInput playerInput)
     {
