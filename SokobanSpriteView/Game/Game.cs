@@ -76,10 +76,11 @@ class Game
 
     public void Update()
     {
+        RenderGame();
+
         foreach (var (keys, action) in keymap)
         {
             foreach (Key key in keys)
-
                 if (Engine.GetKeyDown(key))
                 {
                     pendingInputs.Enqueue(action);
@@ -110,29 +111,17 @@ class Game
         }
     }
 
-    private void asdfasfas()
+    void RenderGame()
     {
-        for (int y = 0; y < cur_state.LevelSize.y; y++)
-        {
-            for (int x = 0; x < cur_state.LevelSize.x; x++)
-            {
-                var pos = new Vector2(x, y);
-                DrawTile(textures.floor, pos);
-                if (cur_state.Walls.Contains((Position)(x, y)))
-                    DrawTile(textures.wall, pos);
-                if (cur_state.Targets.Contains((Position)(x, y)))
-                    DrawTile(textures.target, pos);
-            }
-        }
+        UpdateTime();
 
-        for (int i = 0; i < cur_state.Boxes.Length; i++)
-        {
-            RenderBox(i);
-        }
+        RenderLevelGeometry();
+        RenderBoxes();
+        RenderPlayer();
+    }
 
-        turn_progress += (Engine.TimeDelta / turn_duration) * MathF.Pow(2f, pendingInputs.Count);
-        turn_progress = Utils.Clamp01(turn_progress);
-
+    void RenderPlayer()
+    {
         if (cur_state.WherePlayerIs.Equals(cur_state.Undo().WherePlayerIs))
         {
             if (cur_state.LastPlayerDirection.Equals((Direction)(0, 0)))
@@ -155,6 +144,36 @@ class Game
                 Vector2.Lerp(cur_state.Undo().WherePlayerIs.ToVector2(), cur_state.WherePlayerIs.ToVector2(),
                     turn_progress));
             // boxes move
+        }
+    }
+
+    void UpdateTime()
+    {
+        turn_progress += (Engine.TimeDelta / turn_duration) * MathF.Pow(2f, pendingInputs.Count);
+        turn_progress = Utils.Clamp01(turn_progress);
+    }
+
+    void RenderBoxes()
+    {
+        for (int i = 0; i < cur_state.Boxes.Length; i++)
+        {
+            RenderBox(i);
+        }
+    }
+
+    void RenderLevelGeometry()
+    {
+        for (int y = 0; y < cur_state.LevelSize.y; y++)
+        {
+            for (int x = 0; x < cur_state.LevelSize.x; x++)
+            {
+                var pos = new Vector2(x, y);
+                DrawTile(textures.floor, pos);
+                if (cur_state.Walls.Contains((Position)(x, y)))
+                    DrawTile(textures.wall, pos);
+                if (cur_state.Targets.Contains((Position)(x, y)))
+                    DrawTile(textures.target, pos);
+            }
         }
     }
 
