@@ -75,6 +75,7 @@ class Game
 
     public void Update()
     {
+        // draw static level
         for (int y = 0; y < cur_state.LevelSize.y; y++)
         {
             for (int x = 0; x < cur_state.LevelSize.x; x++)
@@ -85,9 +86,15 @@ class Game
                     DrawTile(textures.wall, pos);
                 if (cur_state.Targets.Contains((Position)(x, y)))
                     DrawTile(textures.target, pos);
-                if (cur_state.Boxes.Contains((Position)(x, y)))
-                    DrawTile(textures.crate, pos);
+                // if (cur_state.Boxes.Contains((Position)(x, y)))
+                //     RenderBox(pos);
+                //     // DrawTile(textures.crate, pos);
             }
+        }
+
+        for (int i = 0; i < cur_state.Boxes.Length; i++)
+        {
+            RenderBox(i)
         }
 
         turn_progress += (Engine.TimeDelta / turn_duration) * MathF.Pow(2f, pendingInputs.Count);
@@ -95,10 +102,13 @@ class Game
 
         if (cur_state.WherePlayerIs.Equals(cur_state.Undo().WherePlayerIs))
         {
-            if (cur_state.LastPlayerDirection.Equals((Direction)(0,0))) {
+            if (cur_state.LastPlayerDirection.Equals((Direction)(0, 0)))
+            {
                 // initial state
                 DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2());
-            } else {
+            }
+            else
+            {
                 // Wall bump
                 DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2()
                     + .2f * cur_state.LastPlayerDirection.ToVector2() * (.5f - MathF.Abs(turn_progress - .5f)));
@@ -108,6 +118,7 @@ class Game
         {
             // linear move
             DrawTile(textures.player, Vector2.Lerp(cur_state.Undo().WherePlayerIs.ToVector2(), cur_state.WherePlayerIs.ToVector2(), turn_progress));
+            // boxes move
         }
 
         foreach (var (keys, action) in keymap)
@@ -141,6 +152,12 @@ class Game
                     turn_progress = 0f;
                     break;
             }
+        }
+    }
+
+    private RenderBox(int index) {
+        if (cur_state.Boxes[index].Equals(cur_state.Undo().Boxes[index])) {
+            DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2());
         }
     }
 
