@@ -55,13 +55,14 @@ class Game
 
     Queue<PlayerInput> pendingInputs = new Queue<PlayerInput>();
 
-    (Key[], PlayerInput)[] keymap = new[] {
-        (new[] {Key.Left, Key.A}, PlayerInput.Left),
-        (new[] {Key.Right, Key.D}, PlayerInput.Right),
-        (new[] {Key.Up, Key.W}, PlayerInput.Up),
-        (new[] {Key.Down, Key.S}, PlayerInput.Down),
-        (new[] {Key.Z}, PlayerInput.Undo),
-        (new[] {Key.R}, PlayerInput.Restart),
+    (Key[], PlayerInput)[] keymap = new[]
+    {
+        (new[] { Key.Left, Key.A }, PlayerInput.Left),
+        (new[] { Key.Right, Key.D }, PlayerInput.Right),
+        (new[] { Key.Up, Key.W }, PlayerInput.Up),
+        (new[] { Key.Down, Key.S }, PlayerInput.Down),
+        (new[] { Key.Z }, PlayerInput.Undo),
+        (new[] { Key.R }, PlayerInput.Restart),
     };
 
     public Game()
@@ -75,52 +76,6 @@ class Game
 
     public void Update()
     {
-        // draw static level
-        for (int y = 0; y < cur_state.LevelSize.y; y++)
-        {
-            for (int x = 0; x < cur_state.LevelSize.x; x++)
-            {
-                var pos = new Vector2(x, y);
-                DrawTile(textures.floor, pos);
-                if (cur_state.Walls.Contains((Position)(x, y)))
-                    DrawTile(textures.wall, pos);
-                if (cur_state.Targets.Contains((Position)(x, y)))
-                    DrawTile(textures.target, pos);
-                // if (cur_state.Boxes.Contains((Position)(x, y)))
-                //     RenderBox(pos);
-                //     // DrawTile(textures.crate, pos);
-            }
-        }
-
-        for (int i = 0; i < cur_state.Boxes.Length; i++)
-        {
-            RenderBox(i);
-        }
-
-        turn_progress += (Engine.TimeDelta / turn_duration) * MathF.Pow(2f, pendingInputs.Count);
-        turn_progress = Utils.Clamp01(turn_progress);
-
-        if (cur_state.WherePlayerIs.Equals(cur_state.Undo().WherePlayerIs))
-        {
-            if (cur_state.LastPlayerDirection.Equals((Direction)(0, 0)))
-            {
-                // initial state
-                DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2());
-            }
-            else
-            {
-                // Wall bump
-                DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2()
-                    + .2f * cur_state.LastPlayerDirection.ToVector2() * (.5f - MathF.Abs(turn_progress - .5f)));
-            }
-        }
-        else
-        {
-            // linear move
-            DrawTile(textures.player, Vector2.Lerp(cur_state.Undo().WherePlayerIs.ToVector2(), cur_state.WherePlayerIs.ToVector2(), turn_progress));
-            // boxes move
-        }
-
         foreach (var (keys, action) in keymap)
         {
             foreach (Key key in keys)
@@ -155,20 +110,66 @@ class Game
         }
     }
 
+    private void asdfasfas()
+    {
+        for (int y = 0; y < cur_state.LevelSize.y; y++)
+        {
+            for (int x = 0; x < cur_state.LevelSize.x; x++)
+            {
+                var pos = new Vector2(x, y);
+                DrawTile(textures.floor, pos);
+                if (cur_state.Walls.Contains((Position)(x, y)))
+                    DrawTile(textures.wall, pos);
+                if (cur_state.Targets.Contains((Position)(x, y)))
+                    DrawTile(textures.target, pos);
+            }
+        }
+
+        for (int i = 0; i < cur_state.Boxes.Length; i++)
+        {
+            RenderBox(i);
+        }
+
+        turn_progress += (Engine.TimeDelta / turn_duration) * MathF.Pow(2f, pendingInputs.Count);
+        turn_progress = Utils.Clamp01(turn_progress);
+
+        if (cur_state.WherePlayerIs.Equals(cur_state.Undo().WherePlayerIs))
+        {
+            if (cur_state.LastPlayerDirection.Equals((Direction)(0, 0)))
+            {
+                // initial state
+                DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2());
+            }
+            else
+            {
+                // Wall bump
+                DrawTile(textures.player, cur_state.WherePlayerIs.ToVector2()
+                                          + .2f * cur_state.LastPlayerDirection.ToVector2() *
+                                          (.5f - MathF.Abs(turn_progress - .5f)));
+            }
+        }
+        else
+        {
+            // linear move
+            DrawTile(textures.player,
+                Vector2.Lerp(cur_state.Undo().WherePlayerIs.ToVector2(), cur_state.WherePlayerIs.ToVector2(),
+                    turn_progress));
+            // boxes move
+        }
+    }
+
     private void RenderBox(int index) => DrawTile(textures.crate, BoxPosition(index));
 
     private Vector2 BoxPosition(int index)
-    {
-        return BoxRemainsAtSamePosition(index)
+        => BoxRemainsAtSamePosition(index)
             ? cur_state.Boxes[index].ToVector2()
-            : Vector2.Lerp(cur_state.Undo().Boxes[index].ToVector2(), cur_state.Boxes[index].ToVector2(), turn_progress);
-    }
+            : Vector2.Lerp(cur_state.Undo().Boxes[index].ToVector2(), cur_state.Boxes[index].ToVector2(),
+                turn_progress);
 
     bool BoxRemainsAtSamePosition(int index) => cur_state.Boxes[index].Equals(cur_state.Undo().Boxes[index]);
 
     private Vector2 DirectionFromInput(PlayerInput playerInput)
     {
-
         switch (playerInput)
         {
             case PlayerInput.Left:
@@ -189,7 +190,6 @@ class Game
 
 class Utils
 {
-
     public static float Clamp01(float value)
     {
         if (value < 0f) return 0f;
