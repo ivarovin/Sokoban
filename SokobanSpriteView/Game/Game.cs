@@ -76,6 +76,7 @@ class Game
 
     public void Update()
     {
+        UpdateTime();
         RenderGame();
 
         foreach (var (keys, action) in keymap)
@@ -113,8 +114,6 @@ class Game
 
     void RenderGame()
     {
-        UpdateTime();
-
         RenderLevelGeometry();
         RenderBoxes();
         RenderPlayer();
