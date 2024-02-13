@@ -155,14 +155,13 @@ class Game
         }
     }
 
-    private void RenderBox(int index) 
+    private void RenderBox(int index) => DrawTile(textures.crate, BoxPosition(index));
+
+    private Vector2 BoxPosition(int index)
     {
-        if (BoxRemainsAtSamePosition(index))
-            DrawTile(textures.crate, cur_state.Boxes[index].ToVector2());
-        else 
-        {
-            DrawTile(textures.crate, Vector2.Lerp(cur_state.Undo().Boxes[index].ToVector2(), cur_state.Boxes[index].ToVector2(), turn_progress));
-        }
+        return BoxRemainsAtSamePosition(index)
+            ? cur_state.Boxes[index].ToVector2()
+            : Vector2.Lerp(cur_state.Undo().Boxes[index].ToVector2(), cur_state.Boxes[index].ToVector2(), turn_progress);
     }
 
     bool BoxRemainsAtSamePosition(int index) => cur_state.Boxes[index].Equals(cur_state.Undo().Boxes[index]);
